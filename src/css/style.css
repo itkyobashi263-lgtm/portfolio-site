@@ -1,0 +1,766 @@
+@charset "UTF-8";
+
+/* スムーススクロール & 追従ヘッダー被り防止 */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* ==========================================================================
+   Base & Reset (Stylish Business Theme: Blue & White)
+   ========================================================================== */
+:root {
+  --primary-color: #0f4c81; /* メインカラー (Classic Blue) */
+  --secondary-color: #2b70af; /* サブカラー (Lighter Blue) */
+  --accent-color: #1abc9c; /* アクセントカラー (Subtle Teal) */
+  --text-main: #333333; /* 主要テキスト色 */
+  --text-light: #555555; /* 補足テキスト色 */
+  --bg-color: #f7f9fc; /* 全体背景色 (薄いクールグレー) */
+  --white: #ffffff;
+  --border-radius: 8px; /* 共通の角丸 */
+  --box-shadow: 0 10px 25px rgba(15, 76, 129, 0.08); /* コンテナ用シャドウ */
+  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.06); /* カード用シャドウ */
+  --transition: all 0.3s ease; /* 標準のトランジション */
+  --transition-bezier: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* プレミアムな動き用 */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-color);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+a {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+}
+
+ul {
+  list-style: none;
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+header {
+  background-color: var(--white);
+  padding: 15px 5%;
+  position: sticky; /* 追従ヘッダー */
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem); /* 画面幅に合わせて自動縮小 */
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+header h1 span {
+  color: var(--accent-color);
+  font-size: clamp(1.4rem, 2.8vw, 1.8rem);
+}
+
+header h1 a {
+  color: inherit; /* ロゴリンクの色をヘッダーと統合 */
+}
+
+header h1 a:hover {
+  opacity: 0.8;
+}
+
+header ul {
+  display: flex;
+  gap: clamp(15px, 2vw, 30px); /* 画面幅に合わせた流動的な間隔 */
+  margin-left: auto; /* ナビゲーションの右寄せ */
+}
+
+header ul li a {
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  font-weight: 600;
+  color: var(--text-main);
+  position: relative;
+  white-space: nowrap;
+}
+
+/* ナビゲーションのホバー時に下線が広がるアニメーション */
+header ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  bottom: -5px;
+  left: 0;
+  transition: width 0.3s ease;
+}
+
+header ul li a:hover::after {
+  width: 100%;
+}
+
+/* ハンバーガーボタン (スマホ専用表示) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.hamburger span {
+  width: 30px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 3px;
+  transition: var(--transition);
+}
+
+/* ==========================================================================
+   Main & Layout Container
+   ========================================================================== */
+/* メインビジュアルグラデーション */
+.main_img {
+  width: 100%;
+  height: 350px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  position: relative;
+}
+
+/* メインビジュアル中央テキスト */
+.main_img::after {
+  content: "Welcome to My Portfolio";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  width: 90%;
+  line-height: 1.3;
+}
+
+/* 主要コンテンツコンテナ (スマホ時でも安全余白を自動確保) */
+.container {
+  max-width: 1100px;
+  width: calc(100% - 40px);
+  margin: -60px auto 50px;
+  background-color: var(--white);
+  padding: clamp(30px, 5vw, 50px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  position: relative;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   Typography & Titles
+   ========================================================================== */
+/* 各セクション共通タイトル (アクセント線付き) */
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+  color: var(--primary-color);
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: var(--accent-color);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.section-title span {
+  display: block;
+  font-size: 0.9rem;
+  color: #888;
+  text-transform: uppercase;
+  margin-top: 5px;
+  letter-spacing: 0.15em;
+}
+
+/* セクション小見出し */
+h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-top: 30px;
+  margin-bottom: 15px;
+  border-left: 5px solid var(--primary-color);
+  padding-left: 10px;
+}
+
+/* ==========================================================================
+   Self Introduction
+   ========================================================================== */
+.titleSI {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.titleSI p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.titleSI p:last-of-type {
+  margin-bottom: 30px;
+}
+
+.titleSI p span {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.titleSI img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 100%;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border: 4px solid var(--white);
+}
+
+.introduction_flexbox {
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 4vw, 40px);
+  margin-bottom: 60px;
+}
+
+/* 自己紹介・スキル紹介カード */
+.list-card {
+  flex: 1;
+  background-color: var(--bg-color);
+  padding: clamp(20px, 3vw, 30px);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  text-align: center;
+}
+
+.list-card h3 {
+  border: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.list-card h3 span {
+  display: block;
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 5px;
+}
+
+.list-card ul li {
+  padding: 10px 0;
+  border-bottom: 1px dashed #dcdcdc;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.list-card ul li:last-child {
+  border-bottom: none;
+}
+
+.list-card ul.Web {
+  margin-top: 15px;
+}
+
+.list-card ul.Web li a {
+  display: inline-block;
+  max-width: 100%;
+  font-weight: 600;
+  word-break: break-all; /* 長い単語のはみ出し防止 */
+}
+
+/* ==========================================================================
+   Gallery (Sample Implementations)
+   ========================================================================== */
+/* 自己PR・強みセクションのグリッド配置 */
+.gallery_flexbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+/* 自己PRカード (ホバー時に上にスッと浮き上がるアニメーション) */
+.image {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(15, 76, 129, 0.15);
+}
+
+.image img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 0;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.image h4 {
+  padding: 15px 15px 5px;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.image p {
+  padding: 0 15px 20px;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* ==========================================================================
+   Project Items (Sample & Training)
+   ========================================================================== */
+.titleSample {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* 各実績カードレイアウト */
+.project-item {
+  width: 100%;
+  margin-bottom: 80px;
+  text-align: left;
+}
+
+.project-item h4 {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--primary-color);
+  padding-left: 10px;
+}
+
+/* バナー画像枠 (ホバー時に若干拡大しクリック感を提供) */
+.project-item a {
+  display: block;
+  margin-bottom: 15px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+}
+
+.project-item a:hover {
+  transform: scale(1.02);
+}
+
+.project-item a img {
+  width: 100%;
+  display: block;
+}
+
+.project-item p {
+  padding: 15px;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  color: var(--text-light);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+#Training,
+#originalTraining {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 80px 0 40px;
+  border-left: 5px solid var(--primary-color);
+  padding-left: 10px;
+}
+
+/* ==========================================================================
+   Structured Project Descriptions
+   ========================================================================== */
+/* 実績用の3項目（課題内容・工夫・手順）構造化定義リストコンテナ */
+.project-desc {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  padding: clamp(15px, 3vw, 25px);
+  margin-top: 15px;
+  text-align: left;
+  border-left: 4px solid var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.desc-list dt {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 1.05rem;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+}
+
+.desc-list dt:first-of-type {
+  margin-top: 0;
+}
+
+.desc-list dd {
+  margin-left: 0;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.desc-list dd ul,
+.desc-list dd ol {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.desc-list dd li {
+  margin-bottom: 6px;
+}
+
+.desc-list dd li:last-child {
+  margin-bottom: 0;
+}
+
+.desc-list dd ul {
+  list-style-type: disc;
+}
+
+.desc-list dd ol {
+  list-style-type: decimal;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+footer {
+  background-color: var(--primary-color);
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 25px 0;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Image Lightbox / Modal Popup
+   ========================================================================== */
+.demo-link-wrapper {
+  margin-top: 15px;
+}
+
+.popup-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-bottom: 1.5px solid rgba(15, 76, 129, 0.3);
+  padding-bottom: 2px;
+  transition: var(--transition);
+}
+
+.popup-trigger:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.popup-trigger .icon-image {
+  font-size: 1.1rem;
+}
+
+/* モーダル背景オーバーレイ (ぼかし効果を適用) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90%;
+  max-height: 85vh;
+  margin: auto;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 拡大ポップアップ画像枠 */
+.modal-content {
+  display: block;
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: var(--border-radius);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95);
+  transition: var(--transition);
+  border: 4px solid var(--white);
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+}
+
+.modal-caption {
+  margin-top: 15px;
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* モーダルを閉じるボタン (画像の右上角に吸着) */
+.modal-close {
+  position: absolute;
+  top: -22px;
+  right: -22px;
+  color: var(--primary-color);
+  background-color: var(--white);
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10005;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-bezier);
+}
+
+.modal-close:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 6px 20px rgba(15, 76, 129, 0.35);
+}
+
+/* ==========================================================================
+   Back to Top Button
+   ========================================================================== */
+/* 浮遊式（Floating）トップに戻るボタン */
+.page-top-btn {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  transition: var(--transition-bezier);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px); /* 初期状態で微かに下がった位置に配置 */
+}
+
+.page-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0); /* スクロール時に定位置にスライドイン */
+}
+
+.page-top-btn:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(26, 188, 156, 0.35);
+}
+
+.page-top-btn .arrow {
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid var(--white);
+  border-right: 3px solid var(--white);
+  transform: translateY(2px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   Responsive (Mobile)
+   ========================================================================== */
+/* スマートフォン・タブレット用 (最大幅768pxに完全集約) */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    z-index: 100;
+  }
+  
+  /* スマホ用ドロップダウンメニュー */
+  header ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: var(--white);
+    width: max-content;
+    min-width: 160px;
+    text-align: right;
+    box-shadow: -5px 10px 20px rgba(0,0,0,0.1);
+    padding: 20px 25px;
+    gap: 0;
+    border-radius: 0 0 0 var(--border-radius);
+  }
+  
+  header ul.active {
+    display: flex;
+  }
+  
+  header ul li {
+    margin: 15px 0;
+  }
+ 
+  header ul li a {
+    font-size: 0.95rem;
+  }
+  
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+  
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+ 
+  .main_img {
+    height: 250px;
+  }
+ 
+  .container {
+    width: calc(100% - 30px);
+    margin: -30px auto 30px;
+    padding: 30px 20px;
+  }
+ 
+  .introduction_flexbox {
+    flex-direction: column;
+    gap: 20px;
+  }
+ 
+  .list-card {
+    padding: 20px;
+  }
+ 
+  .list-card ul.Web li a {
+    font-size: 0.9rem;
+  }
+ 
+  .titleSample {
+    max-width: 100%;
+  }
+ 
+  .project-item {
+    margin-bottom: 50px;
+  }
+ 
+  #Training,
+  #originalTraining {
+    margin: 40px 0 20px;
+  }
+ 
+  footer {
+    /* 画面下部操作バーとの被りを防ぐセーフエリア余白対応 */
+    padding: 25px 0 calc(35px + env(safe-area-inset-bottom, 25px));
+  }
+
+  /* スマホ用モーダル閉じるボタン配置調整 */
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+    font-size: 22px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  /* スマホ用ページトップに戻るボタン調整 */
+  .page-top-btn {
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 25px));
+    width: 44px;
+    height: 44px;
+  }
+  
+  .page-top-btn .arrow {
+    width: 10px;
+    height: 10px;
+    border-top: 2.5px solid var(--white);
+    border-right: 2.5px solid var(--white);
+  }
+}

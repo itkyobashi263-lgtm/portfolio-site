@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Kota Azuma's Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="src/css/style.css">
+  <script src="src/js/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1><a href="#"><span>K</span>ota Azuma's Portfolio</a></h1>
+    <!-- ハンバーガーボタンを追加 -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <!-- メニューにIDを追加 -->
+    <ul id="nav-menu">
+      <li><a href="#SelfIntroduction">自己紹介</a></li>
+      <li><a href="#Training">訓練課題</a></li>
+      <li><a href="#originalTraining">独自課題</a></li>
+    </ul>
+  </header>
+  <main>
+    <div class="main_img">
+    </div>
+    <div class="container"> <!-- ここに主要なコンテンツを格納する -->
+      <div class="titleSI">
+        <h2 class="section-title" id="SelfIntroduction">自己紹介<br>
+        <span>Self Introduction</span>
+        </h2>
+        <p>私の名前は<span>東晃太</span>です。</p>
+        <p>大阪府大阪市出身で、現在はディーキャリアITエキスパートにて<br>プログラミング学習に取り組んでおります。</p>
+        <p>どうぞよろしくお願いいたします。</p>
+        <img src="src/images/img01.jpeg" alt="鳥">
+      </div>
+      <div class="introduction_flexbox">
+        <div class="list-card">
+          <h3>好きなもの・趣味<br>
+          <span>Favorites</span>
+          </h3>
+          <ul class="Favo">
+            <li>音楽鑑賞</li>
+            <li>ゲーム</li>
+            <li>ペットのお世話</li>
+          </ul>
+        </div>
+        <div class="list-card">
+          <h3>スキル<br>
+          <span>Skills</span>
+          </h3>
+          <ul class="Web">
+            <li><a href="#">HTML/CSS</a></li>
+            <li><a href="#javascript">JavaScript</a></li>
+            <li><a href="#php-mysql">PHP/MySQL</a></li>
+            <li><a href="#wordpress">WordPress</a></li>
+            <li><a href="#task-manager">AI-coding</a></li>
+          </ul>
+        </div>
+      </div>
+      <h3>自己PR・強み</h3>
+        <div class="gallery_flexbox">
+          <div class="image">
+            <img src="src/images/gallery01.png" alt="資格学習">
+            <h4>資格学習</h4>
+            <p>プログラマーとして成長するため、また現場で活躍できる人材になるために、日々勉強しております。<br>
+              ITパスポートや基本情報技術者試験の資格を保有。  
+            </p>
+          </div>
+          <div class="image">
+            <img src="src/images/gallery02.png" alt="AI">
+            <h4>AI活用・効率化</h4>
+            <p>Gemini, Codex, AntigravityなどのAIを積極的に活用し、<br>効率的な作業および品質向上に努めています。</p>
+          </div>  
+          <div class="image">
+            <img src="src/images/gallery03.png" alt="知識欲">
+            <h4>知的好奇心・探求心</h4> 
+            <p>プログラミングを学ぶ中で、自分の興味や関心を深め、<br>積極的に新しいことを学んでいます。
+              <br>
+              Python, TypeScript, Goなどバックエンドサイド、SQLでのDB活用・運用、AIを活用した開発などに興味があります。
+            </p>
+          </div>
+          <div class="image">
+            <img src="src/images/gallery04.png" alt="思いやり">
+            <h4>思いやり</h4>
+            <p>チームメンバーや組織を尊重し、常にアサーティブコミュニケーションを心がけています。</p>
+          </div>
+        </div>
+      <div class="titleSample">
+        <h2 class="section-title" id="Sample">実装サンプル<br>
+        <span>Sample</span>
+        </h2>
+        <h3 id="Training">訓練課題</h3>
+
+        <div class="project-item" id="javascript">
+          <h4>JavaScript: 簡易ピアノ</h4>
+          <a href="js/index.html" target="_blank" rel="noopener noreferrer">
+            <img src="src/images/piano_demo.png" alt="簡易ピアノ">
+          </a>
+          <div class="project-desc">
+            <dl class="desc-list">
+              <dt>📌 課題内容</dt>
+              <dd>JavaScriptおよびjQueryを用いて、ブラウザ上で直感的に演奏できる簡易電子ピアノアプリを制作しました。</dd>
+              <dt>💡 工夫した点</dt>
+              <dd>
+                <ul>
+                  <li>日本語・英語・ドイツ語の「3言語表示切り替え機能」を搭載し、幅広いユーザー層に対応したグローバルな多言語設計（マルチリンガル対応）を実現しました。</li>
+                  <li>打鍵時に鍵盤が沈むアニメーションとカラー変化をCSSで表現しました。</li>
+                  <li>「きらきら星」もしくは「チューリップ」の曲が自動で演奏する機能を付けました。</li>
+                </ul>
+              </dd>
+              <dt>🎮 操作手順</dt>
+              <dd>
+                <ol>
+                  <li>画面右下の言語選択メニューから、表示する言語を切り替えることができます。</li>
+                  <li>画面上の白鍵をクリックすると、それぞれの音階の音が鳴ります。</li>
+                  <li>自動演奏ボタンを押すと２曲のどちらかがランダムで演奏されます。</li>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="project-item" id="php-mysql">
+          <h4>PHP/MySQL: ECサイト</h4>
+          <a href="ec_site/index.php" target="_blank" rel="noopener noreferrer">
+            <img src="src/images/ec_demo.png" alt="ECサイト">
+          </a>
+          <div class="project-desc">
+            <dl class="desc-list">
+              <dt>📌 課題内容</dt>
+              <dd>PHPバックエンドとMySQLデータベースを連携させ、会員登録・ログイン、商品一覧、カート機能、管理者向け商品管理（CRUD）機能などを統合した安全なECサイトの開発を行いました。</dd>
+              <dt>💡 工夫した点</dt>
+              <dd>
+                <ul>
+                  <li>XSS（クロスサイトスクリプティング）対策としてのサニタイズ処理や、SQLインジェクションを防ぐプリペアードステートメントを徹底し、高いセキュリティ水準を確保しました。</li>
+                  <li>ログイン状態やユーザー権限（一般ユーザー/管理者）に応じたアクセス制限を細かく設定し、未認可アクセスの保護とページリダイレクトを実装しました。</li>
+                  <li>フォームの再送信による二重注文や多重登録を防止するため、PRG（Post-Redirect-Get）パターンを適用してシステム設計を行いました。</li>
+                </ul>
+              </dd>
+              <dt>🔍 閲覧手順</dt>
+              <dd>
+                <ol>
+                  <li>上の画像またはバナーリンクをクリックすると、ECサイトのトップページが別タブで表示されます。</li>
+                  <li>新規ユーザーとしてアカウント登録を行ってログインし、商品のカート追加や購入完了までのフローをお試しいただけます。</li>
+                  <li>管理者としてログインすることで、商品管理機能（追加・編集・削除）を行う管理者専用ページの機能をご確認いただけます。</li>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="project-item" id="wordpress">
+          <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
+          <a href="wp/" target="_blank" rel="noopener noreferrer">
+            <img src="src/images/wordpress_demo.png" alt="WordPressテーマ作成">
+          </a>
+          <div class="project-desc">
+            <dl class="desc-list">
+              <dt>📌 課題内容</dt>
+              <dd>静的なHTML/CSSのデザインデータを分解・再構築し、PHPを用いてWordPressのオリジナルカスタムテーマ化（CMS化）を行いました。</dd>
+              <dt>💡 工夫した点</dt>
+              <dd>
+                <ul>
+                  <li>ヘッダー、フッター、サイドバーなどの共通要素をコンポーネント化し、テンプレートファイルを細分化することで、コードの保守性と可読性を向上させました。</li>
+                  <li>お知らせ（カスタム投稿）や会社情報などの動的な変更箇所をWordPressの管理画面と連動させ、HTMLの知識がない管理者でも簡単かつ安全にサイト更新を行える設計にしました。</li>
+                </ul>
+              </dd>
+              <dt>🔍 閲覧手順</dt>
+              <dd>
+                <ol>
+                  <li>上の画像リンクからWordPressで動的化されたカスタムサイトを開くことができます。</li>
+                  <li>お知らせ記事などの動的投稿が自動反映され、美しく出力されている構成をご確認いただけます。</li>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <h3 id="originalTraining">独自課題</h3>
+        <div class="project-item" id="task-manager">
+          <h4>AI-coding/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
+          <a href="https://taskmanager-release.joinus-dc-kyobashi.com/login" target="_blank" rel="noopener noreferrer">
+            <img src="src/images/task_manager_login.png" alt="タスク割り当てアプリ Task Manager">
+          </a>
+          <div class="project-desc">
+            <dl class="desc-list">
+              <dt>📌 課題内容</dt>
+              <dd>ローカル環境のみで動作し、ドキュメントや引き継ぎ仕様書が存在しなかった既存のタスク割り当てアプリを対象に、AIを活用したリバースエンジニアリングを実施。ソースコードの読解と分析に基づき仕様書を新規構築し、Webサーバー（ロリポップ!レンタルサーバー）へ実稼働デプロイを行いました。</dd>
+              <dt>💡 工夫した点</dt>
+              <dd>
+                <ul>
+                  <li>ログイン機能、管理画面、自動通知メール送信システム、お問い合わせフォームなど、実稼働に必要な複数のバックエンドシステムを新規設計・構築しました。</li>
+                  <li>リファクタリングを徹底し、乱雑だったプログラムをモジュール化。可読性と今後の拡張性・保守性を大幅に高めました。</li>
+                  <li>実装だけでなく、システム全体仕様書やデータベースのテーブル定義書などを自らゼロから書き起こし、高品質な開発ドキュメント群を整備しました。</li>
+                </ul>
+              </dd>
+              <dt>🔍 操作手順／閲覧手順</dt>
+              <dd>
+                <ol>
+                  <li>上の画像リンクをクリックすると、本番サーバー上で稼働中の「タスク割り当てアプリ」ログイン画面が別タブで表示されます。</li>
+                  <li>下の「タスク割り当てアプリのデモ画像」テキストリンクをクリックすると、ログイン後の直感的なスケジュール・タスク割付管理画面（デモ）をモーダルポップアップでご確認いただけます。</li>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+          <p class="demo-link-wrapper">
+            <a href="src/images/clean_manager_demo.png" class="popup-trigger" data-caption="タスク割り当てアプリ デモ画面 (DutyShuffle)">
+              <span class="icon-image">📸</span> タスク割り当てアプリのデモ画像 (掲載許可済み)
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>Copyright © 2026 Kota Azuma</p>
+  </footer>
+  <!-- Image Popup Modal -->
+  <div id="imageModal" class="modal" aria-hidden="true" role="dialog">
+    <div class="modal-content-wrapper">
+      <div class="image-container">
+        <span class="modal-close" id="modalClose" aria-label="閉じる">&times;</span>
+        <img class="modal-content" id="modalImg" src="" alt="デモ画像">
+      </div>
+      <div id="modalCaption" class="modal-caption"></div>
+    </div>
+  </div>
+  <!-- Topに戻るボタン -->
+  <a href="#" id="page-top" class="page-top-btn" aria-label="ページトップへ戻る">
+    <span class="arrow"></span>
+  </a>
+</body>
+</html>
