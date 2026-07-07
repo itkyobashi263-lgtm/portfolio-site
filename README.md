@@ -1,10 +1,10 @@
-﻿# 自己紹介・ポートフォリオサイト
+# 自己紹介・ポートフォリオサイト
 
 私の自己紹介と、これまでの学習成果や作品をまとめたポートフォリオサイトです。
 
 ## 🌐 Live Demo
 サイトはこちらからご覧いただけます：
-[Live Demo URL (GitHub Pages)](#) <!-- 後ほどURLを追記します -->
+[Live Demo URL (GitHub Pages)](https://itkyobashi263-lgtm.github.io/portfolio-site/)
 
 ## 🛠 使用技術
 - **HTML5**
