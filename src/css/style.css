@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 
 /* スムーススクロール & 追従ヘッダー被り防止 */
 html {
@@ -801,3 +801,4 @@ footer {
   overflow-wrap: break-word;
   line-height: 1.6;
 }
+
