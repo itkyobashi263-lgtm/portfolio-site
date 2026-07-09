@@ -236,6 +236,44 @@
             </a>
           </p>
         </div>
+        <div class="project-item" id="ai-chatbot">
+          <h4>AI-coding/フルスタック: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
+          <a href="src/images/ai_chat_demo.png" class="popup-trigger" data-caption="AIチャットボット (SK-Nexus) チャット画面">
+            <img src="src/images/ai_chat_demo.png" alt="AIチャットボット SK-Nexus">
+          </a>
+          <div class="project-desc">
+            <dl class="desc-list">
+              <dt>📌 課題内容</dt>
+              <dd>情報漏洩リスクを考慮し、外部APIへ一切データを送信せず「完全ローカル環境」で推論を行うRAG対応AIチャットボットをフルスクラッチで構築。社内文書（PDF/DOCX/CSV）を読み込ませ、その知識に基づいた回答を生成するシステムを開発しました。ローカルでの安定稼働に加え、最終的にOracle Cloud (OCI)環境へのデプロイと、Tailscaleを用いた安全な閉域網アクセスの構築までを達成しています。</dd>
+              <dt>💡 工夫した点</dt>
+              <dd>
+                <ul>
+                  <li><strong>ハイブリッド検索エンジンと完全ローカルLLM:</strong> ChromaDB（ベクトル検索）とSQLiteを統合したRAGエンジンを構築。Ollama経由で軽量モデル（<code>qwen3.5:4b</code>等）を稼働させることで、12GB RAMの制約があるクラウド環境でもセキュアかつ高精度な応答を実現しました。</li>
+                  <li><strong>フルスタックアーキテクチャの完成:</strong> フロントエンドはReact/Vite、バックエンドはFastAPIを採用。JWT認証、ユーザー別のチャットスレッド分離、SSEを利用したストリーミング応答など、実用的なUXを提供しています。</li>
+                  <li><strong>インフラ構築とセキュアなクラウド移行:</strong> アプリケーション全体をDocker Composeでコンテナ化。OCIのARMインスタンス（Ubuntu）へデプロイし、Nginx経由での配信、およびTailscaleを利用したVPNアクセス網を構築して、外部からの不正アクセスを遮断しました。</li>
+                  <li><strong>エンタープライズ向けの管理機能と監査:</strong> Fluent-bitによる監査ログ収集、ファイル名のサニタイズ、ロール別（一般・管理者）の画面制御を実装し、実際の業務利用に耐えうるセキュリティ体制を組み込みました。</li>
+                </ul>
+              </dd>
+              <dt>🔍 操作手順／閲覧手順</dt>
+              <dd>
+                <ol>
+                  <li>上の画像リンクをクリックすると、本システムのメインとなる「チャット画面」をポップアップでご確認いただけます。</li>
+                  <li>下のテキストリンクから、RAG用の社内文書アップロード・管理を行う専用ダッシュボード画面をご確認いただけます。</li>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+          <p class="demo-link-wrapper">
+            <a href="src/images/ai_knowledge_demo.png" class="popup-trigger" data-caption="AIチャットボット (SK-Nexus) ナレッジ管理画面">
+              <span class="icon-image">📸</span> ナレッジ管理画面のデモ画像
+            </a>
+          </p>
+          <div class="github-link-wrapper center">
+            <a href="https://github.com/itkyobashi263-lgtm/sk-nexus-public" target="_blank" rel="noopener noreferrer" class="github-btn">
+              🐈‍⬛ ソースコードを見る (GitHub)
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </main>
