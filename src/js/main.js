@@ -40,6 +40,11 @@ const smoothScrollTo = (targetY, duration) => {
 // ページ内のリンク（#から始まるhref）をクリックした時のスムーススクロール処理
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener("click", function(e) {
+    // もしタブボタン自体がクリックされた場合は、スムーススクロールを無効化（タブの切り替え処理のみに任せる）
+    if (this.closest('.tab-links')) {
+      return;
+    }
+
     // デフォルトの瞬間的な移動をキャンセル
     e.preventDefault();
 
@@ -60,12 +65,42 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     const targetElement = document.querySelector(targetId);
 
     if (targetElement) {
-      // ヘッダーの高さを動的に取得してスクロール位置を調整（追従ヘッダーによる見出しの被りを防止）
+      // もしターゲットがタブコンテンツ（#javascriptなど）だった場合、対象タブをアクティブにする
+      if (targetElement.classList.contains('tab-content')) {
+        // 全てのタブとコンテンツをリセット
+        document.querySelectorAll('.tab-links li').forEach(li => li.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+          content.style.animation = 'none';
+          content.offsetHeight; /* trigger reflow */
+          content.style.animation = null; 
+        });
+        
+        // 対象のタブコンテンツをアクティブ化
+        targetElement.classList.add('active');
+        
+        // 対応するタブボタンもアクティブ化
+        const matchingTabBtn = document.querySelector(`.tab-links a[href="${targetId}"]`);
+        if (matchingTabBtn) {
+          matchingTabBtn.parentElement.classList.add('active');
+        }
+      }
+
+      // ヘッダーの高さを動的に取得してスクロール位置を調整
       const header = document.querySelector("header");
       const headerHeight = header ? header.offsetHeight : 0;
-      const targetY = targetElement.offsetTop - headerHeight;
+      
+      let targetY = targetElement.offsetTop - headerHeight;
+      
+      // タブコンテンツの場合は、親要素である「Projects」セクションの位置にスクロールする（見切れ防止）
+      if (targetElement.classList.contains('tab-content')) {
+        const projectsSection = document.getElementById('Projects');
+        if (projectsSection) {
+          targetY = projectsSection.offsetTop - headerHeight;
+        }
+      }
 
-      // 650msかけてスムースに指定位置へスクロール（軽快かつ洗練された速度）
+      // 650msかけてスムースに指定位置へスクロール
       smoothScrollTo(targetY, 650);
     }
   });
@@ -141,3 +176,59 @@ if (pageTopBtn) {
     }
   });
 }
+
+// ==========================================
+// Modern Enhancements: Tabs & Scroll Animation
+// ==========================================
+
+// --- Intersection Observer for Fade-in ---
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.15
+};
+
+const fadeObserver = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Uncomment the line below if you only want the animation to play once
+      // observer.unobserve(entry.target); 
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.fade-in').forEach(element => {
+  fadeObserver.observe(element);
+});
+
+// --- Tab Switching Logic ---
+const tabLinks = document.querySelectorAll('.tab-links a');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabLinks.forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // Prevent smooth scroll logic from firing
+    
+    // Remove active class from all links and contents
+    document.querySelectorAll('.tab-links li').forEach(li => li.classList.remove('active'));
+    tabContents.forEach(content => {
+      content.classList.remove('active');
+      // Reset animation by removing and re-adding style if needed
+      content.style.animation = 'none';
+      content.offsetHeight; /* trigger reflow */
+      content.style.animation = null; 
+    });
+    
+    // Add active class to clicked link's parent <li>
+    this.parentElement.classList.add('active');
+    
+    // Add active class to corresponding tab content
+    const targetId = this.getAttribute('href');
+    const targetContent = document.querySelector(targetId);
+    if (targetContent) {
+      targetContent.classList.add('active');
+    }
+  });
+});
