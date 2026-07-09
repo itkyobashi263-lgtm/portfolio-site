@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <title>Kota Azuma's Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="src/css/style.css">
   <script src="src/js/main.js" defer></script>
 </head>
@@ -19,15 +22,15 @@
     <!-- メニューにIDを追加 -->
     <ul id="nav-menu">
       <li><a href="#SelfIntroduction">自己紹介</a></li>
-      <li><a href="#Training">訓練課題</a></li>
-      <li><a href="#originalTraining">独自課題</a></li>
+      <li><a href="#SelfPR">自己PR・強み</a></li>
+      <li><a href="#Projects">制作実績</a></li>
     </ul>
   </header>
   <main>
     <div class="main_img">
     </div>
     <div class="container"> <!-- ここに主要なコンテンツを格納する -->
-      <div class="titleSI">
+      <div class="titleSI fade-in">
         <h2 class="section-title" id="SelfIntroduction">自己紹介<br>
         <span>Self Introduction</span>
         </h2>
@@ -41,7 +44,7 @@
         </div>
         <img src="src/images/img01.jpeg" alt="鳥">
       </div>
-      <div class="introduction_flexbox">
+      <div class="introduction_flexbox fade-in">
         <div class="list-card">
           <h3>好きなもの・趣味<br>
           <span>Favorites</span>
@@ -65,7 +68,8 @@
           </ul>
         </div>
       </div>
-      <h3>自己PR・強み</h3>
+      <div class="fade-in">
+        <h3 class="section-subtitle" id="SelfPR">自己PR・強み</h3>
         <div class="gallery_flexbox">
           <div class="image">
             <img src="src/images/gallery01.png" alt="資格学習">
@@ -93,15 +97,27 @@
             <p>チームメンバーや組織を尊重し、常にアサーティブコミュニケーションを心がけています。</p>
           </div>
         </div>
-      <div class="titleSample">
-        <h2 class="section-title" id="Sample">実装サンプル<br>
-        <span>Sample</span>
+      </div>
+      <div class="titleSample fade-in" id="Projects">
+        <h2 class="section-title">制作実績<br>
+        <span>Projects & Skills</span>
         </h2>
-        <h3 id="Training">訓練課題</h3>
+        
+        <!-- タブボタン -->
+        <div class="tabs-container">
+          <ul class="tab-links">
+            <li class="active"><a href="#javascript">簡易ピアノ (JS)</a></li>
+            <li><a href="#php-mysql">ECサイト (PHP)</a></li>
+            <li><a href="#wordpress">テーマ制作 (WP)</a></li>
+            <li><a href="#task-manager">タスク管理アプリ</a></li>
+            <li><a href="#ai-chatbot">AIチャットボット</a></li>
+          </ul>
 
-        <div class="project-item" id="javascript">
-          <h4>JavaScript: 簡易ピアノ</h4>
-          <a href="https://itkyobashi263-lgtm.github.io/simple-piano-app/" target="_blank" rel="noopener noreferrer">
+          <!-- タブコンテンツ -->
+          <div class="tab-content-wrapper">
+            <div class="project-item tab-content active" id="javascript">
+              <h4>JavaScript: 簡易ピアノ</h4>
+              <a href="https://itkyobashi263-lgtm.github.io/simple-piano-app/" target="_blank" rel="noopener noreferrer">
             <img src="src/images/piano_demo.png" alt="簡易ピアノ">
           </a>
           <div class="project-desc">
@@ -131,10 +147,10 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-        </div>
+            </div>
 
-        <div class="project-item" id="php-mysql">
-          <h4>PHP/MySQL: ECサイト</h4>
+            <div class="project-item tab-content" id="php-mysql">
+              <h4>PHP/MySQL: ECサイト</h4>
           <a href="https://portfolio02.dc-itex.com/kyobashi/0004/ec_site/login.php" target="_blank" rel="noopener noreferrer">
             <img src="src/images/ec_demo.png" alt="ECサイト">
           </a>
@@ -166,10 +182,10 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-        </div>
+            </div>
 
-        <div class="project-item" id="wordpress">
-          <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
+            <div class="project-item tab-content" id="wordpress">
+              <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
           <a href="https://portfolio02.dc-itex.com/kyobashi/0004/wp/" target="_blank" rel="noopener noreferrer">
             <img src="src/images/wordpress_demo.png" alt="WordPressテーマ作成">
           </a>
@@ -199,10 +215,10 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-        </div>
-        <h3 id="originalTraining">独自課題</h3>
-        <div class="project-item" id="task-manager">
-          <h4>AI-coding/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
+            </div>
+            
+            <div class="project-item tab-content" id="task-manager">
+              <h4>AI-coding/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
           <a href="https://taskmanager-release.joinus-dc-kyobashi.com/login" target="_blank" rel="noopener noreferrer">
             <img src="src/images/task_manager_login.png" alt="タスク割り当てアプリ Task Manager">
           </a>
@@ -235,9 +251,10 @@
               <span class="icon-image">📄</span> 制作概要書・システム仕様書 (PDF) を閲覧する
             </a>
           </p>
-        </div>
-        <div class="project-item" id="ai-chatbot">
-          <h4>AI-coding/フルスタック: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
+            </div>
+            
+            <div class="project-item tab-content" id="ai-chatbot">
+              <h4>AI-coding/フルスタック: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
           <img src="src/images/ai_top_page.png" alt="AIチャットボット SK-Nexus トップ画面" class="non-clickable-thumbnail" style="max-width: 100%; height: auto; display: block; margin-bottom: 15px;">
           <div class="project-desc">
             <dl class="desc-list">
@@ -270,8 +287,10 @@
             <a href="https://github.com/itkyobashi263-lgtm/sk-nexus-public" target="_blank" rel="noopener noreferrer" class="github-btn">
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
-          </div>
-        </div>
+              </div>
+            </div>
+          </div> <!-- /.tab-content-wrapper -->
+        </div> <!-- /.tabs-container -->
       </div>
     </div>
   </main>
