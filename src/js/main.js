@@ -90,13 +90,16 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
       const header = document.querySelector("header");
       const headerHeight = header ? header.offsetHeight : 0;
       
-      let targetY = targetElement.offsetTop - headerHeight;
+      // 要素の絶対Y座標（ドキュメント全体からの相対位置）を取得するヘルパー
+      const getAbsoluteY = (el) => el.getBoundingClientRect().top + window.pageYOffset;
+      
+      let targetY = getAbsoluteY(targetElement) - headerHeight;
       
       // タブコンテンツの場合は、親要素である「Projects」セクションの位置にスクロールする（見切れ防止）
       if (targetElement.classList.contains('tab-content')) {
         const projectsSection = document.getElementById('Projects');
         if (projectsSection) {
-          targetY = projectsSection.offsetTop - headerHeight;
+          targetY = getAbsoluteY(projectsSection) - headerHeight;
         }
       }
 
