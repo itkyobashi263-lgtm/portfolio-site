@@ -766,23 +766,38 @@ footer {
 }
 
 /* --- GitHub Link Button --- */
+.github-link-wrapper {
+  margin: 15px 0;
+}
+.github-link-wrapper.center {
+  text-align: center;
+}
 .github-btn {
   display: inline-block;
   background-color: #24292e;
-  color: #ffffff;
+  color: var(--white);
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   text-decoration: none;
   font-weight: bold;
   font-size: 0.9rem;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 .github-btn:hover {
   background-color: #000000;
-  color: #ffffff;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.github-link-wrapper {
-  margin-top: 20px;
-  margin-bottom: 20px;
+
+/* --- Utility Classes --- */
+.attention-note {
+  color: #e63946;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.6;
 }
