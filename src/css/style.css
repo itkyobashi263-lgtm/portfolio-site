@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 
 /* スムーススクロール & 追従ヘッダー被り防止 */
 html {
@@ -10,18 +10,18 @@ html {
    Base & Reset (Stylish Business Theme: Blue & White)
    ========================================================================== */
 :root {
-  --primary-color: #0f4c81; /* メインカラー (Classic Blue) */
-  --secondary-color: #2b70af; /* サブカラー (Lighter Blue) */
-  --accent-color: #1abc9c; /* アクセントカラー (Subtle Teal) */
-  --text-main: #333333; /* 主要テキスト色 */
-  --text-light: #555555; /* 補足テキスト色 */
-  --bg-color: #f7f9fc; /* 全体背景色 (薄いクールグレー) */
+  --primary-color: #2563eb; /* モダンブルー */
+  --secondary-color: #3b82f6; /* 明るめのブルー */
+  --accent-color: #10b981; /* モダンエメラルド */
+  --text-main: #1f2937; /* 濃いグレー */
+  --text-light: #6b7280; /* 中間グレー */
+  --bg-color: #f3f4f6; /* 極薄いグレー */
   --white: #ffffff;
-  --border-radius: 8px; /* 共通の角丸 */
-  --box-shadow: 0 10px 25px rgba(15, 76, 129, 0.08); /* コンテナ用シャドウ */
-  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.06); /* カード用シャドウ */
-  --transition: all 0.3s ease; /* 標準のトランジション */
-  --transition-bezier: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* プレミアムな動き用 */
+  --border-radius: 12px; /* より丸みのある角丸 */
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04); /* より柔らかい広域シャドウ */
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05); /* カード用シャドウ */
+  --transition: all 0.3s ease;
+  --transition-bezier: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* さらに滑らかな動き */
 }
 
 * {
@@ -31,7 +31,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  font-family: 'Inter', 'Noto Sans JP', "Helvetica Neue", Arial, sans-serif;
   color: var(--text-main);
   background-color: var(--bg-color);
   line-height: 1.7;
@@ -61,7 +61,9 @@ ul {
    Header & Navigation
    ========================================================================== */
 header {
-  background-color: var(--white);
+  background-color: rgba(255, 255, 255, 0.85); /* 半透明化 */
+  backdrop-filter: blur(12px); /* すりガラス効果 */
+  -webkit-backdrop-filter: blur(12px);
   padding: 15px 5%;
   position: sticky; /* 追従ヘッダー */
   top: 0;
@@ -144,9 +146,17 @@ header ul li a:hover::after {
 /* メインビジュアルグラデーション */
 .main_img {
   width: 100%;
-  height: 350px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  height: 400px; /* 少し高さを出す */
+  background: linear-gradient(-45deg, #2563eb, #3b82f6, #10b981, #0ea5e9);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   position: relative;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* メインビジュアル中央テキスト */
@@ -295,6 +305,14 @@ h3 {
 
 .list-card ul li:last-child {
   border-bottom: none;
+}
+
+.list-card ul.Favo li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 12px 10px; /* 少し余白を持たせて窮屈さを軽減 */
+  word-break: keep-all; /* 単語の途中での改行を防ぐ */
+  overflow-wrap: anywhere; /* 長すぎる場合は折り返す */
 }
 
 .list-card ul.Web {
@@ -800,5 +818,105 @@ footer {
   word-break: keep-all;
   overflow-wrap: break-word;
   line-height: 1.6;
+}
+
+/* ==========================================================================
+   Modern Enhancements (Tabs & Animations)
+   ========================================================================== */
+
+/* Fade-in Animation on Scroll */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tabs Container */
+.tabs-container {
+  margin-top: 30px;
+}
+
+/* Tab Links */
+.tab-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+  padding: 0;
+  list-style: none;
+}
+.tab-links li {
+  flex: 0 1 auto;
+}
+.tab-links a {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: var(--white);
+  color: var(--text-light);
+  border-radius: 30px; /* Pill shape */
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bezier);
+}
+.tab-links a:hover {
+  transform: translateY(-2px);
+  color: var(--primary-color);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+.tab-links li.active a {
+  background-color: var(--primary-color);
+  color: var(--white);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  border-color: var(--primary-color);
+}
+
+/* Tab Content */
+.tab-content-wrapper {
+  position: relative;
+  min-height: 400px; /* Prevent height jumping */
+}
+.tab-content {
+  display: none; /* Hide by default */
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInTab 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.tab-content.active {
+  display: block; /* Show active */
+}
+
+@keyframes fadeInTab {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhancing existing cards for hover effect */
+.list-card, .image, .project-item {
+  transition: var(--transition-bezier);
+}
+.list-card:hover, .image:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+.project-item {
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.03);
 }
 
