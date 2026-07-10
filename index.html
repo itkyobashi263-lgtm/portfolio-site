@@ -23,11 +23,11 @@
   <header>
     <h1><a href="#"><span>K</span>ota Azuma's Portfolio</a></h1>
     <!-- ハンバーガーボタンを追加 -->
-    <div class="hamburger" id="hamburger">
+    <button type="button" class="hamburger" id="hamburger" aria-controls="nav-menu" aria-expanded="false" aria-label="メニューを開閉する">
       <span></span>
       <span></span>
       <span></span>
-    </div>
+    </button>
     <!-- メニューにIDを追加 -->
     <ul id="nav-menu">
       <li><a href="#SelfIntroduction">自己紹介</a></li>
@@ -39,8 +39,8 @@
     <div class="main_img">
     </div>
     <div class="container"> <!-- ここに主要なコンテンツを格納する -->
-      <div class="titleSI fade-in">
-        <h2 class="section-title" id="SelfIntroduction">自己紹介<br>
+      <section class="titleSI fade-in" id="SelfIntroduction">
+        <h2 class="section-title">自己紹介<br>
         <span>Self Introduction</span>
         </h2>
         <p>私の名前は<span>東晃太</span>です。</p>
@@ -52,8 +52,8 @@
           </a>
         </div>
         <img src="src/images/img01.jpeg" alt="鳥">
-      </div>
-      <div class="introduction_flexbox fade-in">
+      </section>
+      <section class="introduction_flexbox fade-in">
         <div class="list-card">
           <h3>好きなもの・趣味<br>
           <span>Favorites</span>
@@ -77,9 +77,9 @@
             <li><a href="#task-manager">AI-coding</a></li>
           </ul>
         </div>
-      </div>
-      <div class="fade-in">
-        <h3 class="section-subtitle" id="SelfPR">自己PR・強み</h3>
+      </section>
+      <section class="fade-in" id="SelfPR">
+        <h3 class="section-subtitle">自己PR・強み</h3>
         <div class="gallery_flexbox">
           <div class="image">
             <img src="src/images/gallery01.png" alt="資格学習">
@@ -106,8 +106,8 @@
             <p>チームメンバーや組織を尊重し、常にアサーティブコミュニケーションを心がけています。<br>相手の視点に立って意見を傾聴しつつ、建設的な提案を交わすことで、チーム全体で協力して課題解決に取り組む姿勢を大切にしています。</p>
           </div>
         </div>
-      </div>
-      <div class="titleSample fade-in" id="Projects">
+      </section>
+      <section class="titleSample fade-in" id="Projects">
         <h2 class="section-title">制作実績<br>
         <span>Projects & Skills</span>
         </h2>
@@ -124,7 +124,7 @@
 
           <!-- タブコンテンツ -->
           <div class="tab-content-wrapper">
-            <div class="project-item tab-content active" id="javascript">
+            <article class="project-item tab-content active" id="javascript">
               <h4>JavaScript: 簡易ピアノ</h4>
               <a href="https://itkyobashi263-lgtm.github.io/simple-piano-app/" target="_blank" rel="noopener noreferrer">
             <img src="src/images/piano_demo.png" alt="簡易ピアノ">
@@ -156,9 +156,9 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-            </div>
+            </article>
 
-            <div class="project-item tab-content" id="php-mysql">
+            <article class="project-item tab-content" id="php-mysql">
               <h4>PHP/MySQL: ECサイト</h4>
           <a href="https://portfolio02.dc-itex.com/kyobashi/0004/ec_site/login.php" target="_blank" rel="noopener noreferrer">
             <img src="src/images/ec_demo.png" alt="ECサイト">
@@ -191,9 +191,9 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-            </div>
+            </article>
 
-            <div class="project-item tab-content" id="wordpress">
+            <article class="project-item tab-content" id="wordpress">
               <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
           <a href="https://portfolio02.dc-itex.com/kyobashi/0004/wp/" target="_blank" rel="noopener noreferrer">
             <img src="src/images/wordpress_demo.png" alt="WordPressテーマ作成">
@@ -224,9 +224,9 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
           </div>
-            </div>
+            </article>
             
-            <div class="project-item tab-content" id="task-manager">
+            <article class="project-item tab-content" id="task-manager">
               <h4>AI-coding/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
           <a href="https://taskmanager-release.joinus-dc-kyobashi.com/login" target="_blank" rel="noopener noreferrer">
             <img src="src/images/task_manager_login.png" alt="タスク割り当てアプリ Task Manager">
@@ -260,9 +260,9 @@
               <span class="icon-image">📄</span> 制作概要書・システム仕様書 (PDF) を閲覧する
             </a>
           </p>
-            </div>
+            </article>
             
-            <div class="project-item tab-content" id="ai-chatbot">
+            <article class="project-item tab-content" id="ai-chatbot">
               <h4>AI-coding/フルスタック: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
           <img src="src/images/ai_top_page.png" alt="AIチャットボット SK-Nexus トップ画面" class="non-clickable-thumbnail" style="max-width: 100%; height: auto; display: block; margin-bottom: 15px;">
           <div class="project-desc">
@@ -297,10 +297,10 @@
               🐈‍⬛ ソースコードを見る (GitHub)
             </a>
               </div>
-            </div>
+            </article>
           </div> <!-- /.tab-content-wrapper -->
         </div> <!-- /.tabs-container -->
-      </div>
+      </section>
     </div>
   </main>
   <footer>
