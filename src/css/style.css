@@ -920,3 +920,35 @@ footer {
   border: 1px solid rgba(0,0,0,0.03);
 }
 
+
+
+.dual-images-wrapper {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.dual-images-wrapper img {
+  width: 48%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.dual-images-wrapper img:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 600px) {
+  .dual-images-wrapper {
+    flex-direction: column;
+  }
+  .dual-images-wrapper img {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

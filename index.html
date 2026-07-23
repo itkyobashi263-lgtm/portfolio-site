@@ -72,6 +72,7 @@
           <ul class="Web">
             <li><a href="#">HTML/CSS</a></li>
             <li><a href="#javascript">JavaScript</a></li>
+            <li><a href="#internal-portal">React / TypeScript</a></li>
             <li><a href="#php-mysql">PHP/MySQL</a></li>
             <li><a href="#wordpress">WordPress</a></li>
             <li><a href="#task-manager">AI-coding</a></li>
@@ -120,6 +121,7 @@
             <li><a href="#wordpress">テーマ制作 (WP)</a></li>
             <li><a href="#task-manager">タスク管理アプリ</a></li>
             <li><a href="#ai-chatbot">AIチャットボット</a></li>
+            <li><a href="#internal-portal">社内ポータル</a></li>
           </ul>
 
           <!-- タブコンテンツ -->
@@ -298,6 +300,33 @@
             </a>
               </div>
             </article>
+
+            <article class="project-item tab-content" id="internal-portal">
+              <h4>React/PHP: 業務効率化社内ポータル (フロント/バックエンド分離)</h4>
+              
+              <div class="dual-images-wrapper">
+                <img src="src/images/portal_front.png" alt="社内ポータル フロントエンド画面">
+                <img src="src/images/portal_back.png" alt="社内ポータル バックエンド・管理画面">
+              </div>
+
+              <div class="project-desc">
+                <dl class="desc-list">
+                  <dt>📌 概要・目的</dt>
+                  <dd>フロントエンド（SPA）とバックエンド（API）を分離した構成による業務効率化ポータルを開発。既存のコードベースにリファクタリングを施し、フルスタックな課題解決とアーキテクチャの改善を行いました。</dd>
+                  
+                  <dt>💡 工夫した点・技術的負債へのアプローチ</dt>
+                  <dd>
+                    <ul>
+                      <li><strong>保守性とスケーラビリティの向上：</strong> バックエンド（PHP）ではフロントコントローラパターンを徹底し、<code>JsonRepository</code>クラスを用いたRepositoryパターンを導入。データ操作処理を一元化し、モジュールごとのコード量削減と見通しの良さを実現しました。</li>
+                      <li><strong>セキュアな管理者向けバックエンド運用：</strong> 重要ディレクトリへの <code>.htaccess</code> 配置や、IP接続制限を設けることで、管理者のみがアクセスできる安全な運用体制を構築しました。</li>
+                      <li><strong>フロントエンドの共通化：</strong> React（TypeScript）において、非同期通信とエラーハンドリングを統括するカスタムフック（<code>useApi</code>）を導入。冗長なコードを排除しUIの一貫性を保ちました。</li>
+                      <li><strong>次期担当者（学習者）への配慮：</strong> フロントエンドとバックエンドの役割を明確に切り離すことで、学習者が誤って重要な基盤を破壊しにくい構成としています。機能追加は主にGitHubで公開されるJSアプリを想定し、安全に学習・拡張できる導線を確保しました。</li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+            </article>
+
           </div> <!-- /.tab-content-wrapper -->
         </div> <!-- /.tabs-container -->
       </section>
