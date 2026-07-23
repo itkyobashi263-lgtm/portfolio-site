@@ -74,9 +74,7 @@
             <li><a href="#javascript">JavaScript</a></li>
             <li><a href="#php-mysql">PHP/MySQL</a></li>
             <li><a href="#wordpress">WordPress</a></li>
-            <li><a href="#task-manager">AI-coding 1: タスク管理アプリ</a></li>
-            <li><a href="#ai-chatbot">AI-coding 2: AIチャットボット</a></li>
-            <li><a href="#internal-portal">AI-coding 3: 社内ポータル</a></li>
+            <li>AI-coding <a href="#task-manager">1</a>, <a href="#ai-chatbot">2</a>, <a href="#internal-portal">3</a></li>
           </ul>
         </div>
       </section>
@@ -122,7 +120,7 @@
             <li><a href="#wordpress">テーマ制作 (WP)</a></li>
             <li><a href="#task-manager">タスク管理アプリ</a></li>
             <li><a href="#ai-chatbot">AIチャットボット</a></li>
-            <li><a href="#internal-portal">社内ポータル</a></li>
+            <li><a href="#internal-portal">事業所内ポータル</a></li>
           </ul>
 
           <!-- タブコンテンツ -->
@@ -303,28 +301,35 @@
             </article>
 
             <article class="project-item tab-content" id="internal-portal">
-              <h4>React/PHP: 業務効率化社内ポータル (フロント/バックエンド分離)</h4>
+              <h4>React/PHP: 業務効率化 事業所内ポータルサイト (フロント/バックエンド分離)</h4>
               
               <div class="dual-images-wrapper">
-                <img src="src/images/portal_front.png" alt="社内ポータル フロントエンド画面">
-                <img src="src/images/portal_back.png" alt="社内ポータル バックエンド・管理画面">
+                <a href="https://dc-it-kyobashi.github.io/portalapp/" target="_blank" rel="noopener noreferrer">
+                  <img src="src/images/portal_front.png" alt="事業所内ポータル フロントエンド画面">
+                </a>
+                <img src="src/images/portal_back.png" alt="事業所内ポータル バックエンド・管理画面">
               </div>
 
               <div class="project-desc">
                 <dl class="desc-list">
                   <dt>📌 概要・目的</dt>
-                  <dd>フロントエンド（SPA）とバックエンド（API）を分離した構成による業務効率化ポータルを開発。既存のコードベースにリファクタリングを施し、フルスタックな課題解決とアーキテクチャの改善を行いました。</dd>
+                  <dd>フロントエンド（SPA）とバックエンド（API）を完全に分離したアーキテクチャにて、事業所内の業務効率化ポータルサイトを開発。<strong>企画から設計、開発、公開までを一貫して主導</strong>しました。既存のコードベースへのリファクタリングを通じ、フルスタックな課題解決を行っています。</dd>
                   
                   <dt>💡 工夫した点・技術的負債へのアプローチ</dt>
                   <dd>
                     <ul>
+                      <li><strong>次期担当者への配慮と運用保守性：</strong> フロントエンドとバックエンドの役割を明確に切り離すことで、以降の運用や保守、学習が非常にしやすい構成を構築しました。機能追加は主にGitHubで公開されるJSアプリを想定しており、学習者が安全に開発プロセスを学べる導線を確保しています。</li>
                       <li><strong>保守性とスケーラビリティの向上：</strong> バックエンド（PHP）ではフロントコントローラパターンを徹底し、<code>JsonRepository</code>クラスを用いたRepositoryパターンを導入。データ操作処理を一元化し、モジュールごとのコード量削減と見通しの良さを実現しました。</li>
-                      <li><strong>セキュアな管理者向けバックエンド運用：</strong> 重要ディレクトリへの <code>.htaccess</code> 配置や、IP接続制限を設けることで、管理者のみがアクセスできる安全な運用体制を構築しました。</li>
                       <li><strong>フロントエンドの共通化：</strong> React（TypeScript）において、非同期通信とエラーハンドリングを統括するカスタムフック（<code>useApi</code>）を導入。冗長なコードを排除しUIの一貫性を保ちました。</li>
-                      <li><strong>次期担当者（学習者）への配慮：</strong> フロントエンドとバックエンドの役割を明確に切り離すことで、学習者が誤って重要な基盤を破壊しにくい構成としています。機能追加は主にGitHubで公開されるJSアプリを想定し、安全に学習・拡張できる導線を確保しました。</li>
+                      <li><strong>セキュアな管理者向けバックエンド運用：</strong> 重要ディレクトリへの <code>.htaccess</code> 配置や、IP接続制限を設けることで、管理者のみがシステム内部に対応できる安全な運用体制を構築しました。</li>
                     </ul>
                   </dd>
                 </dl>
+              </div>
+              <div class="github-link-wrapper center">
+                <a href="https://github.com/DC-IT-KYOBASHI/portalapp" target="_blank" rel="noopener noreferrer" class="github-btn">
+                  🐈‍⬛ フロントエンドのコードを見る (GitHub)
+                </a>
               </div>
             </article>
 
