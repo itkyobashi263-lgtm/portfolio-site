@@ -2,8 +2,13 @@
 
 /* スムーススクロール & 追従ヘッダー被り防止 */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 80px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ==========================================================================
@@ -20,8 +25,8 @@ html {
   --border-radius: 12px; /* より丸みのある角丸 */
   --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04); /* より柔らかい広域シャドウ */
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05); /* カード用シャドウ */
-  --transition: all 0.3s ease;
-  --transition-bezier: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* さらに滑らかな動き */
+  --ease-standard: 0.3s ease;
+  --ease-out-expo: 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* さらに滑らかな動き */
 }
 
 * {
@@ -40,11 +45,27 @@ body {
 
 a {
   color: var(--primary-color);
-  transition: var(--transition);
+  transition: color var(--ease-standard), opacity var(--ease-standard);
 }
 
 a:hover {
   color: var(--accent-color);
+}
+
+:where(a:any-link, button):focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+.titleSI p,
+.image p,
+.project-desc dd,
+.list-card li {
+  text-wrap: pretty;
 }
 
 img {
@@ -137,7 +158,7 @@ header ul li a:hover::after {
   height: 3px;
   background-color: var(--primary-color);
   border-radius: 3px;
-  transition: var(--transition);
+  transition: transform var(--ease-standard), opacity var(--ease-standard);
 }
 
 /* ==========================================================================
@@ -149,8 +170,13 @@ header ul li a:hover::after {
   height: 400px; /* 少し高さを出す */
   background: linear-gradient(-45deg, #2563eb, #3b82f6, #10b981, #0ea5e9);
   background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
   position: relative;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .main_img {
+    animation: gradientBG 15s ease infinite;
+  }
 }
 
 @keyframes gradientBG {
@@ -298,13 +324,12 @@ h3 {
 
 .list-card ul li {
   padding: 10px 0;
-  border-bottom: 1px dashed #dcdcdc;
   color: var(--text-light);
   font-weight: 500;
 }
 
-.list-card ul li:last-child {
-  border-bottom: none;
+.list-card ul li:not(:last-child) {
+  border-bottom: 1px dashed #dcdcdc;
 }
 
 .list-card ul.Favo li {
@@ -343,12 +368,15 @@ h3 {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  translate: 0;
+  transition: translate var(--ease-standard), box-shadow var(--ease-standard);
 }
 
-.image:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(15, 76, 129, 0.15);
+@media (prefers-reduced-motion: no-preference) {
+  .image:hover {
+    translate: 0 -5px;
+    box-shadow: 0 12px 30px rgba(15, 76, 129, 0.15);
+  }
 }
 
 .image img {
@@ -402,11 +430,14 @@ h3 {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease;
+  scale: 1;
+  transition: scale var(--ease-standard);
 }
 
-.project-item a:hover {
-  transform: scale(1.02);
+@media (prefers-reduced-motion: no-preference) {
+  .project-item a:hover {
+    scale: 1.02;
+  }
 }
 
 .project-item a img {
@@ -474,12 +505,8 @@ h3 {
   margin-top: 5px;
 }
 
-.desc-list dd li {
+.desc-list dd li:not(:last-child) {
   margin-bottom: 6px;
-}
-
-.desc-list dd li:last-child {
-  margin-bottom: 0;
 }
 
 .desc-list dd ul {
@@ -516,13 +543,19 @@ footer {
   color: var(--primary-color);
   border-bottom: 1.5px solid rgba(15, 76, 129, 0.3);
   padding-bottom: 2px;
-  transition: var(--transition);
+  translate: 0;
+  transition: color var(--ease-standard), border-color var(--ease-standard), translate var(--ease-standard);
 }
 
 .popup-trigger:hover {
   color: var(--accent-color);
   border-color: var(--accent-color);
-  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .popup-trigger:hover {
+    translate: 0 -1px;
+  }
 }
 
 .popup-trigger .icon-image {
@@ -534,10 +567,7 @@ footer {
   display: none;
   position: fixed;
   z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   overflow: auto;
   background-color: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(8px);
@@ -545,11 +575,24 @@ footer {
   transition: opacity 0.3s ease;
   align-items: center;
   justify-content: center;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.1s;
+  }
 }
 
 .modal.show {
   display: flex;
   opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.modal.is-closing {
+  display: flex;
+  opacity: 0;
 }
 
 .modal-content-wrapper {
@@ -557,7 +600,7 @@ footer {
   flex-direction: column;
   align-items: center;
   max-width: 90%;
-  max-height: 85vh;
+  max-height: 85dvh;
   margin: auto;
 }
 
@@ -571,17 +614,26 @@ footer {
 .modal-content {
   display: block;
   max-width: 100%;
-  max-height: 75vh;
+  max-height: 75dvh;
   object-fit: contain;
   border-radius: var(--border-radius);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  transform: scale(0.95);
-  transition: var(--transition);
+  transition: scale var(--ease-standard);
   border: 4px solid var(--white);
+
+  @media (prefers-reduced-motion: no-preference) {
+    scale: 0.95;
+  }
 }
 
 .modal.show .modal-content {
-  transform: scale(1);
+  @media (prefers-reduced-motion: no-preference) {
+    scale: 1;
+
+    @starting-style {
+      scale: 0.95;
+    }
+  }
 }
 
 .modal-caption {
@@ -612,14 +664,22 @@ footer {
   justify-content: center;
   border-radius: 50%;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: var(--transition-bezier);
+  rotate: 0deg;
+  scale: 1;
+  transition: background-color var(--ease-out-expo), color var(--ease-out-expo), box-shadow var(--ease-out-expo), rotate var(--ease-out-expo), scale var(--ease-out-expo);
 }
 
 .modal-close:hover {
   background-color: var(--primary-color);
   color: var(--white);
-  transform: rotate(90deg) scale(1.1);
   box-shadow: 0 6px 20px rgba(15, 76, 129, 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .modal-close:hover {
+    rotate: 90deg;
+    scale: 1.1;
+  }
 }
 
 /* ==========================================================================
@@ -639,22 +699,35 @@ footer {
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   z-index: 9999;
-  transition: var(--transition-bezier);
+  transition: opacity var(--ease-out-expo), visibility var(--ease-out-expo), background-color var(--ease-out-expo), box-shadow var(--ease-out-expo), translate var(--ease-out-expo);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px); /* 初期状態で微かに下がった位置に配置 */
+  pointer-events: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 20px; /* 初期状態で微かに下がった位置に配置 */
+  }
 }
 
 .page-top-btn.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0); /* スクロール時に定位置にスライドイン */
+  pointer-events: auto;
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 0; /* スクロール時に定位置にスライドイン */
+  }
 }
 
 .page-top-btn:hover {
   background-color: var(--accent-color);
-  transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(26, 188, 156, 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-top-btn:hover {
+    translate: 0 -5px;
+  }
 }
 
 .page-top-btn .arrow {
@@ -799,14 +872,20 @@ footer {
   text-decoration: none;
   font-weight: bold;
   font-size: 0.9rem;
-  transition: var(--transition);
+  translate: 0;
+  transition: background-color var(--ease-standard), color var(--ease-standard), box-shadow var(--ease-standard), translate var(--ease-standard);
   box-shadow: var(--shadow-sm);
 }
 .github-btn:hover {
   background-color: #000000;
   color: var(--white);
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .github-btn:hover {
+    translate: 0 -2px;
+  }
 }
 
 /* --- Utility Classes --- */
@@ -827,13 +906,19 @@ footer {
 /* Fade-in Animation on Scroll */
 .fade-in {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.4s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 30px;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), translate 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 .fade-in.visible {
   opacity: 1;
-  transform: translateY(0);
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 0;
+  }
 }
 
 /* Tabs Container */
@@ -864,12 +949,18 @@ footer {
   text-decoration: none;
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow: var(--shadow-sm);
-  transition: var(--transition-bezier);
+  translate: 0;
+  transition: color var(--ease-out-expo), background-color var(--ease-out-expo), border-color var(--ease-out-expo), box-shadow var(--ease-out-expo), translate var(--ease-out-expo);
 }
 .tab-links a:hover {
-  transform: translateY(-2px);
   color: var(--primary-color);
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tab-links a:hover {
+    translate: 0 -2px;
+  }
 }
 .tab-links li.active a {
   background-color: var(--primary-color);
@@ -885,32 +976,24 @@ footer {
 }
 .tab-content {
   display: none; /* Hide by default */
-  opacity: 0;
-  transform: translateY(15px);
-  animation: fadeInTab 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .tab-content.active {
   display: block; /* Show active */
 }
 
-@keyframes fadeInTab {
-  0% {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 /* Enhancing existing cards for hover effect */
-.list-card, .image, .project-item {
-  transition: var(--transition-bezier);
+.list-card, .image {
+  translate: 0;
+  transition: translate var(--ease-out-expo), box-shadow var(--ease-out-expo);
 }
 .list-card:hover, .image:hover {
-  transform: translateY(-8px);
   box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .list-card:hover, .image:hover {
+    translate: 0 -8px;
+  }
 }
 .project-item {
   background-color: var(--white);
@@ -936,11 +1019,14 @@ footer {
   height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  scale: 1;
+  transition: scale var(--ease-standard);
 }
 
-.dual-images-wrapper img:hover {
-  transform: scale(1.02);
+@media (prefers-reduced-motion: no-preference) {
+  .dual-images-wrapper img:hover {
+    scale: 1.02;
+  }
 }
 
 @media (max-width: 600px) {
