@@ -219,8 +219,7 @@ header:not(.is-wide) #nav-menu {
 
   @media (prefers-reduced-motion: no-preference) {
     translate: 0 -8px;
-    transition: opacity 0.2s ease, translate 0.2s ease, display 0.2s ease, overlay 0.2s ease;
-    transition-behavior: allow-discrete;
+    transition-property: opacity, translate, display, overlay;
   }
 }
 
@@ -473,15 +472,6 @@ h3 {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  translate: 0;
-  transition: translate var(--ease-standard), box-shadow var(--ease-standard);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .image:hover {
-    translate: 0 -5px;
-    box-shadow: 0 12px 30px rgba(15, 76, 129, 0.15);
-  }
 }
 
 .image img {
@@ -516,7 +506,12 @@ h3 {
 .project-item {
   width: 100%;
   margin-bottom: 80px;
+  padding: 30px;
   text-align: left;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .project-item h4 {
@@ -668,6 +663,17 @@ footer {
 }
 
 /* ネイティブ <dialog> モーダル (トップレイヤー + スクロール封じ込め) */
+dialog.modal,
+dialog.modal::backdrop {
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  transition-behavior: allow-discrete;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.1s;
+  }
+}
+
 dialog.modal {
   position: fixed;
   inset: 0;
@@ -680,13 +686,6 @@ dialog.modal {
   overflow: auto;
   opacity: 0;
   transition-property: opacity, display, overlay;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-out;
-  transition-behavior: allow-discrete;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition-duration: 0.1s;
-  }
 }
 
 dialog.modal:modal {
@@ -714,13 +713,6 @@ dialog.modal::backdrop {
   overflow: hidden;
   overscroll-behavior: contain;
   transition-property: background-color, backdrop-filter, display, overlay;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-out;
-  transition-behavior: allow-discrete;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition-duration: 0.1s;
-  }
 }
 
 dialog.modal[open]:where(:not([data-closing]))::backdrop {
@@ -1140,13 +1132,6 @@ dialog.modal[open]:where(:not([data-closing])) .modal-content {
   .list-card:hover, .image:hover {
     translate: 0 -8px;
   }
-}
-.project-item {
-  background-color: var(--white);
-  padding: 30px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0,0,0,0.03);
 }
 
 
