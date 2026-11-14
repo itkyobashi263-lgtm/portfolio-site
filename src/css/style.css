@@ -90,9 +90,22 @@ header {
   top: 0;
   z-index: 999;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.header-inner > * {
+  flex-shrink: 0;
+}
+
+header.is-measuring * {
+  transition: none !important;
 }
 
 header h1 {
@@ -114,10 +127,10 @@ header h1 a:hover {
   opacity: 0.8;
 }
 
-header ul {
+header nav {
+  margin-left: auto;
   display: flex;
-  gap: clamp(15px, 2vw, 30px); /* 画面幅に合わせた流動的な間隔 */
-  margin-left: auto; /* ナビゲーションの右寄せ */
+  align-items: center;
 }
 
 header ul li a {
@@ -144,13 +157,20 @@ header ul li a:hover::after {
   width: 100%;
 }
 
-/* ハンバーガーボタン (スマホ専用表示) */
+/* ハンバーガーボタン (狭い画面用ポップオーバーのトリガー) */
 .hamburger {
-  display: none;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   gap: 6px;
-  margin-left: auto;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  anchor-name: --hamburger-btn;
 }
 
 .hamburger span {
@@ -159,6 +179,91 @@ header ul li a:hover::after {
   background-color: var(--primary-color);
   border-radius: 3px;
   transition: transform var(--ease-standard), opacity var(--ease-standard);
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+header:not(.is-wide) #nav-menu {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  position: fixed;
+  inset: auto;
+  inset-block-start: 4.5rem;
+  inset-block-start: anchor(--hamburger-btn bottom);
+  inset-inline-end: 5%;
+  margin: 0.5rem 0 0;
+  border: 0;
+  background-color: var(--white);
+  min-inline-size: 180px;
+  max-inline-size: calc(100dvw - 2rem);
+  max-block-size: calc(100dvh - 6rem);
+  overflow: auto;
+  text-align: right;
+  box-shadow: -5px 10px 20px rgba(0, 0, 0, 0.12);
+  padding: 18px 24px;
+  border-radius: var(--border-radius);
+  opacity: 0;
+  transition: opacity 0.2s ease, display 0.2s ease, overlay 0.2s ease;
+  transition-behavior: allow-discrete;
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 -8px;
+    transition: opacity 0.2s ease, translate 0.2s ease, display 0.2s ease, overlay 0.2s ease;
+    transition-behavior: allow-discrete;
+  }
+}
+
+header:not(.is-wide) #nav-menu:is(:popover-open, .\:popover-open) {
+  display: flex;
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 0;
+
+    @starting-style {
+      translate: 0 -8px;
+    }
+  }
+}
+
+header.is-wide .hamburger {
+  display: none;
+}
+
+header.is-wide #nav-menu {
+  position: static;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(15px, 2vw, 30px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  min-inline-size: 0;
+  max-inline-size: none;
+  max-block-size: none;
+  overflow: visible;
+}
+
+header.is-wide #nav-menu::backdrop {
+  display: none;
 }
 
 /* ==========================================================================
@@ -562,27 +667,40 @@ footer {
   font-size: 1.1rem;
 }
 
-/* モーダル背景オーバーレイ (ぼかし効果を適用) */
-.modal {
-  display: none;
+/* ネイティブ <dialog> モーダル (トップレイヤー + スクロール封じ込め) */
+dialog.modal {
   position: fixed;
-  z-index: 10000;
   inset: 0;
+  margin: auto;
+  max-width: calc(100dvw - 1.5rem);
+  max-height: calc(100dvh - 1.5rem);
+  padding: 24px;
+  border: none;
+  background: transparent;
   overflow: auto;
-  background-color: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(8px);
   opacity: 0;
-  transition: opacity 0.3s ease;
-  align-items: center;
-  justify-content: center;
+  transition-property: opacity, display, overlay;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  transition-behavior: allow-discrete;
 
   @media (prefers-reduced-motion: reduce) {
     transition-duration: 0.1s;
   }
 }
 
-.modal.show {
+dialog.modal:modal {
+  overscroll-behavior: contain;
+}
+
+dialog.modal[open] {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+dialog.modal[open]:where(:not([data-closing])) {
   opacity: 1;
 
   @starting-style {
@@ -590,17 +708,36 @@ footer {
   }
 }
 
-.modal.is-closing {
-  display: flex;
-  opacity: 0;
+dialog.modal::backdrop {
+  background-color: rgb(15 23 42 / 0);
+  backdrop-filter: blur(0px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+  transition-property: background-color, backdrop-filter, display, overlay;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  transition-behavior: allow-discrete;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.1s;
+  }
+}
+
+dialog.modal[open]:where(:not([data-closing]))::backdrop {
+  background-color: rgb(15 23 42 / 0.85);
+  backdrop-filter: blur(8px);
+
+  @starting-style {
+    background-color: rgb(15 23 42 / 0);
+    backdrop-filter: blur(0px);
+  }
 }
 
 .modal-content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 90%;
-  max-height: 85dvh;
+  max-width: 100%;
   margin: auto;
 }
 
@@ -626,7 +763,7 @@ footer {
   }
 }
 
-.modal.show .modal-content {
+dialog.modal[open]:where(:not([data-closing])) .modal-content {
   @media (prefers-reduced-motion: no-preference) {
     scale: 1;
 
@@ -653,6 +790,7 @@ footer {
   right: -22px;
   color: var(--primary-color);
   background-color: var(--white);
+  border: none;
   font-size: 26px;
   font-weight: bold;
   cursor: pointer;
@@ -743,52 +881,6 @@ footer {
    ========================================================================== */
 /* スマートフォン・タブレット用 (最大幅768pxに完全集約) */
 @media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-    z-index: 100;
-  }
-  
-  /* スマホ用ドロップダウンメニュー */
-  header ul {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    right: 0;
-    background-color: var(--white);
-    width: max-content;
-    min-width: 160px;
-    text-align: right;
-    box-shadow: -5px 10px 20px rgba(0,0,0,0.1);
-    padding: 20px 25px;
-    gap: 0;
-    border-radius: 0 0 0 var(--border-radius);
-  }
-  
-  header ul.active {
-    display: flex;
-  }
-  
-  header ul li {
-    margin: 15px 0;
-  }
- 
-  header ul li a {
-    font-size: 0.95rem;
-  }
-  
-  .hamburger.active span:nth-child(1) {
-    transform: translateY(9px) rotate(45deg);
-  }
-  
-  .hamburger.active span:nth-child(2) {
-    opacity: 0;
-  }
-  
-  .hamburger.active span:nth-child(3) {
-    transform: translateY(-9px) rotate(-45deg);
-  }
- 
   .main_img {
     height: 250px;
   }
@@ -830,7 +922,11 @@ footer {
     padding: 25px 0 calc(35px + env(safe-area-inset-bottom, 25px));
   }
 
-  /* スマホ用モーダル閉じるボタン配置調整 */
+  /* スマホ用モーダル余白・閉じるボタン配置調整 */
+  dialog.modal {
+    padding: 12px;
+  }
+
   .modal-close {
     top: 10px;
     right: 10px;
@@ -926,59 +1022,109 @@ footer {
   margin-top: 30px;
 }
 
-/* Tab Links */
+/* Tab Links (1行スクロール + 端フェード) */
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes reveal-fade-start {
+  to {
+    --fade-start: var(--fade-size);
+  }
+}
+
+@keyframes hide-fade-end {
+  from {
+    --fade-end: var(--fade-size);
+  }
+}
+
 .tab-links {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
-  justify-content: center;
+  justify-content: safe center;
+  overflow-x: auto;
+  scroll-snap-type: inline proximity;
+  scroll-padding-inline: 2rem;
+  scrollbar-width: none;
   margin-bottom: 30px;
-  padding: 0;
-  list-style: none;
+  padding: 6px 4px;
+  --fade-size: 2rem;
 }
-.tab-links li {
-  flex: 0 1 auto;
+
+@supports (animation-timeline: scroll()) {
+  .tab-links {
+    mask:
+      linear-gradient(black, black) no-clip subtract,
+      linear-gradient(to right, black, transparent) 0 0 / var(--fade-start) 100% no-repeat no-clip,
+      linear-gradient(to right, transparent, black) 100% 0 / var(--fade-end) 100% no-repeat no-clip;
+    animation: reveal-fade-start linear both, hide-fade-end linear both;
+    animation-timeline: scroll(self inline);
+    animation-range: 0 var(--fade-size), calc(100% - var(--fade-size)) 100%;
+  }
 }
-.tab-links a {
+
+.tab-btn {
+  flex: none;
+  scroll-snap-align: start;
+  position: relative;
   display: inline-block;
   padding: 12px 20px;
   background-color: var(--white);
   color: var(--text-light);
   border-radius: 30px; /* Pill shape */
+  font-family: inherit;
+  font-size: 0.95rem;
   font-weight: 600;
-  text-decoration: none;
+  cursor: pointer;
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow: var(--shadow-sm);
   translate: 0;
   transition: color var(--ease-out-expo), background-color var(--ease-out-expo), border-color var(--ease-out-expo), box-shadow var(--ease-out-expo), translate var(--ease-out-expo);
 }
-.tab-links a:hover {
+.tab-btn:hover {
   color: var(--primary-color);
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .tab-links a:hover {
+  .tab-btn:hover {
     translate: 0 -2px;
   }
 }
-.tab-links li.active a {
+
+.tab-btn[aria-selected="true"] {
   background-color: var(--primary-color);
   color: var(--white);
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
   border-color: var(--primary-color);
 }
 
-/* Tab Content */
+.tab-btn[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 20px 5px;
+  border-block-end: 2px solid currentColor;
+}
+
+/* Tab Content (hidden="until-found" 用に外枠へ余白・枠線・背景を置かない) */
 .tab-content-wrapper {
   position: relative;
   min-height: 400px; /* Prevent height jumping */
 }
 .tab-content {
-  display: none; /* Hide by default */
-}
-.tab-content.active {
-  display: block; /* Show active */
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 /* Enhancing existing cards for hover effect */

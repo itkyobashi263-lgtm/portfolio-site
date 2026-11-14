@@ -9,31 +9,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="src/css/style.css">
   <script src="src/js/main.js" defer></script>
+  <script type="module">
+    if (!Object.hasOwn(HTMLElement.prototype, "popover")) {
+      import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js");
+    }
+  </script>
   <noscript>
     <style>
       /* JSが無効な場合はフェードイン要素を最初から表示する */
-      .fade-in { opacity: 1; transform: none; }
+      .fade-in { opacity: 1; translate: none; }
       /* タブコンテンツもすべて表示状態にする */
-      .tab-content { display: block; opacity: 1; transform: none; animation: none; margin-bottom: 20px; }
+      .tab-content[hidden] { display: block; content-visibility: visible; }
+      .tab-content { margin-bottom: 20px; }
       .tabs-container .tab-links { display: none; }
     </style>
   </noscript>
 </head>
 <body>
   <header>
-    <h1><a href="#"><span>K</span>ota Azuma's Portfolio</a></h1>
-    <!-- ハンバーガーボタンを追加 -->
-    <button type="button" class="hamburger" id="hamburger" aria-controls="nav-menu" aria-expanded="false" aria-label="メニューを開閉する">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <!-- メニューにIDを追加 -->
-    <ul id="nav-menu">
-      <li><a href="#SelfIntroduction">自己紹介</a></li>
-      <li><a href="#SelfPR">自己PR・強み</a></li>
-      <li><a href="#Projects">制作実績</a></li>
-    </ul>
+    <div class="header-inner">
+      <h1><a href="#"><span>K</span>ota Azuma's Portfolio</a></h1>
+      <nav aria-label="主要">
+        <!-- ハンバーガーボタン -->
+        <button type="button" class="hamburger" id="hamburger" popovertarget="nav-menu" popovertargetaction="toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="メニューを開閉する">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <!-- メニュー -->
+        <ul id="nav-menu" popover="auto">
+          <li><a href="#SelfIntroduction">自己紹介</a></li>
+          <li><a href="#SelfPR">自己PR・強み</a></li>
+          <li><a href="#Projects">制作実績</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <main>
     <div class="main_img">
@@ -114,230 +124,242 @@
         
         <!-- タブボタン -->
         <div class="tabs-container">
-          <ul class="tab-links">
-            <li class="active"><a href="#javascript">簡易ピアノ (JS)</a></li>
-            <li><a href="#php-mysql">ECサイト (PHP)</a></li>
-            <li><a href="#wordpress">テーマ制作 (WP)</a></li>
-            <li><a href="#task-manager">タスク管理アプリ</a></li>
-            <li><a href="#ai-chatbot">AIチャットボット</a></li>
-            <li><a href="#internal-portal">事業所内ポータル</a></li>
-          </ul>
+          <div class="tab-links" role="tablist" aria-label="制作実績一覧">
+            <button type="button" class="tab-btn" id="tab-javascript" role="tab" aria-selected="true" tabindex="0" data-target="javascript">簡易ピアノ (JS)</button>
+            <button type="button" class="tab-btn" id="tab-php-mysql" role="tab" aria-selected="false" tabindex="-1" data-target="php-mysql">ECサイト (PHP)</button>
+            <button type="button" class="tab-btn" id="tab-wordpress" role="tab" aria-selected="false" tabindex="-1" data-target="wordpress">テーマ制作 (WP)</button>
+            <button type="button" class="tab-btn" id="tab-task-manager" role="tab" aria-selected="false" tabindex="-1" data-target="task-manager">タスク管理アプリ</button>
+            <button type="button" class="tab-btn" id="tab-ai-chatbot" role="tab" aria-selected="false" tabindex="-1" data-target="ai-chatbot">AIチャットボット</button>
+            <button type="button" class="tab-btn" id="tab-internal-portal" role="tab" aria-selected="false" tabindex="-1" data-target="internal-portal">事業所内ポータル</button>
+          </div>
 
           <!-- タブコンテンツ -->
           <div class="tab-content-wrapper">
-            <article class="project-item tab-content active" id="javascript">
-              <h4>JavaScript: 簡易ピアノ</h4>
-              <a href="https://itkyobashi263-lgtm.github.io/simple-piano-app/" target="_blank" rel="noopener noreferrer">
-            <img src="src/images/piano_demo.png" alt="簡易ピアノ">
-          </a>
-          <div class="project-desc">
-            <dl class="desc-list">
-              <dt>📌 課題内容</dt>
-              <dd>JavaScriptおよびjQueryを用いて、ブラウザ上で直感的に演奏できる簡易電子ピアノアプリを制作しました。</dd>
-              <dt>💡 工夫した点</dt>
-              <dd>
-                <ul>
-                  <li>日本語・英語・ドイツ語の「3言語表示切り替え機能」を搭載し、幅広いユーザー層に対応したグローバルな多言語設計（マルチリンガル対応）を実現しました。</li>
-                  <li>打鍵時に鍵盤が沈むアニメーションとカラー変化をCSSで表現しました。</li>
-                  <li>「きらきら星」もしくは「チューリップ」の曲が自動で演奏する機能を付けました。</li>
-                </ul>
-              </dd>
-              <dt>🎮 操作手順</dt>
-              <dd>
-                <ol>
-                  <li>画面右下の言語選択メニューから、表示する言語を切り替えることができます。</li>
-                  <li>画面上の白鍵をクリックすると、それぞれの音階の音が鳴ります。</li>
-                  <li>自動演奏ボタンを押すと２曲のどちらかがランダムで演奏されます。</li>
-                </ol>
-              </dd>
-            </dl>
-          </div>
-          <div class="github-link-wrapper center">
-            <a href="https://github.com/itkyobashi263-lgtm/simple-piano-app" target="_blank" rel="noopener noreferrer" class="github-btn">
-              🐈‍⬛ ソースコードを見る (GitHub)
-            </a>
-          </div>
-            </article>
-
-            <article class="project-item tab-content" id="php-mysql">
-              <h4>PHP/MySQL: ECサイト</h4>
-          <a href="https://portfolio02.dc-itex.com/kyobashi/0004/ec_site/login.php" target="_blank" rel="noopener noreferrer">
-            <img src="src/images/ec_demo.png" alt="ECサイト">
-          </a>
-          <div class="project-desc">
-            <dl class="desc-list">
-              <dt>📌 課題内容</dt>
-              <dd>PHPバックエンドとMySQLデータベースを連携させ、会員登録・ログイン、商品一覧、カート機能、管理者向け商品管理（CRUD）機能などを統合した安全なECサイトの開発を行いました。</dd>
-              <dt>💡 工夫した点</dt>
-              <dd>
-                <ul>
-                  <li>XSS（クロスサイトスクリプティング）対策としてのサニタイズ処理や、SQLインジェクションを防ぐプリペアードステートメントを徹底し、高いセキュリティ水準を確保しました。</li>
-                  <li>ログイン状態やユーザー権限（一般ユーザー/管理者）に応じたアクセス制限を細かく設定し、未認可アクセスの保護とページリダイレクトを実装しました。</li>
-                  <li>フォームの再送信による二重注文や多重登録を防止するため、PRG（Post-Redirect-Get）パターンを適用してシステム設計を行いました。</li>
-                </ul>
-              </dd>
-              <dt>🔍 閲覧手順</dt>
-              <dd>
-                <p class="attention-note">⚠️ サイト閲覧には専用のパスワードが必要です。ログイン情報は下のGitHub(README)をご参照ください。</p>
-                <ol>
-                  <li>上の画像またはバナーリンクをクリックすると、ECサイトのトップページが別タブで表示されます。</li>
-                  <li>新規ユーザーとしてアカウント登録を行ってログインし、商品のカート追加や購入完了までのフローをお試しいただけます。</li>
-                  <li>管理者としてログインすることで、商品管理機能（追加・編集・削除）を行う管理者専用ページの機能をご確認いただけます。</li>
-                </ol>
-              </dd>
-            </dl>
-          </div>
-          <div class="github-link-wrapper center">
-            <a href="https://github.com/itkyobashi263-lgtm/php-ec-site" target="_blank" rel="noopener noreferrer" class="github-btn">
-              🐈‍⬛ ソースコードを見る (GitHub)
-            </a>
-          </div>
-            </article>
-
-            <article class="project-item tab-content" id="wordpress">
-              <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
-          <a href="https://portfolio02.dc-itex.com/kyobashi/0004/wp/" target="_blank" rel="noopener noreferrer">
-            <img src="src/images/wordpress_demo.png" alt="WordPressテーマ作成">
-          </a>
-          <div class="project-desc">
-            <dl class="desc-list">
-              <dt>📌 課題内容</dt>
-              <dd>静的なHTML/CSSのデザインデータを分解・再構築し、PHPを用いてWordPressのオリジナルカスタムテーマ化（CMS化）を行いました。</dd>
-              <dt>💡 工夫した点</dt>
-              <dd>
-                <ul>
-                  <li>ヘッダー、フッター、サイドバーなどの共通要素をコンポーネント化し、テンプレートファイルを細分化することで、コードの保守性と可読性を向上させました。</li>
-                  <li>お知らせ（カスタム投稿）や会社情報などの動的な変更箇所をWordPressの管理画面と連動させ、HTMLの知識がない管理者でも簡単かつ安全にサイト更新を行える設計にしました。</li>
-                </ul>
-              </dd>
-              <dt>🔍 閲覧手順</dt>
-              <dd>
-                <p class="attention-note">⚠️ サイト閲覧には専用のパスワードが必要です。ログイン情報は下のGitHub(README)をご参照ください。</p>
-                <ol>
-                  <li>上の画像リンクからWordPressで動的化されたカスタムサイトを開くことができます。</li>
-                  <li>お知らせ記事などの動的投稿が自動反映され、美しく出力されている構成をご確認いただけます。</li>
-                </ol>
-              </dd>
-            </dl>
-          </div>
-          <div class="github-link-wrapper center">
-            <a href="https://github.com/itkyobashi263-lgtm/wordpress-custom-theme" target="_blank" rel="noopener noreferrer" class="github-btn">
-              🐈‍⬛ ソースコードを見る (GitHub)
-            </a>
-          </div>
-            </article>
-            
-            <article class="project-item tab-content" id="task-manager">
-              <h4>PHP・MySQL/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
-          <a href="https://taskmanager-release.joinus-dc-kyobashi.com/login" target="_blank" rel="noopener noreferrer">
-            <img src="src/images/task_manager_login.png" alt="タスク割り当てアプリ Task Manager">
-          </a>
-          <div class="project-desc">
-            <dl class="desc-list">
-              <dt>📌 課題内容</dt>
-              <dd>ローカル環境のみで動作し、ドキュメントや引き継ぎ仕様書が存在しなかった既存のタスク割り当てアプリを対象に、AIを活用したリバースエンジニアリングを実施。ソースコードの読解と分析に基づき仕様書を新規構築し、Webサーバー（ロリポップ!レンタルサーバー）へ実稼働デプロイを行いました。</dd>
-              <dt>💡 工夫した点</dt>
-              <dd>
-                <ul>
-                  <li>ログイン機能、管理画面、自動通知メール送信システム、お問い合わせフォームなど、実稼働に必要な複数のバックエンドシステムを新規設計・構築しました。</li>
-                  <li>リファクタリングを徹底し、乱雑だったプログラムをモジュール化。可読性と今後の拡張性・保守性を大幅に高めました。</li>
-                  <li>実装だけでなく、システム全体仕様書やデータベースのテーブル定義書などを自らゼロから書き起こし、高品質な開発ドキュメント群を整備しました。</li>
-                </ul>
-              </dd>
-              <dt>🔍 操作手順／閲覧手順</dt>
-              <dd>
-                <ol>
-                  <li>上の画像リンクをクリックすると、本番サーバー上で稼働中の「タスク割り当てアプリ」ログイン画面が別タブで表示されます。</li>
-                  <li>下の「タスク割り当てアプリのデモ画像」テキストリンクをクリックすると、ログイン後の直感的なスケジュール・タスク割付管理画面（デモ）をモーダルポップアップでご確認いただけます。</li>
-                </ol>
-              </dd>
-            </dl>
-          </div>
-          <p class="demo-link-wrapper">
-            <a href="src/images/task_manager_demo.png" class="popup-trigger" data-caption="タスク割り当てアプリ デモ画面 (DutyShuffle)">
-              <span class="icon-image">📸</span> タスク割り当てアプリのデモ画像 (掲載許可済み)
-            </a>
-            <a href="src/pdf/制作概要書_task_manager_東晃太.pdf" target="_blank" rel="noopener noreferrer" class="doc-link">
-              <span class="icon-image">📄</span> 制作概要書・システム仕様書 (PDF) を閲覧する
-            </a>
-          </p>
-            </article>
-            
-            <article class="project-item tab-content" id="ai-chatbot">
-              <h4>フルスタック（React・Python・OCI・Docker）: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
-          <img src="src/images/ai_top_page.png" alt="AIチャットボット SK-Nexus トップ画面" class="non-clickable-thumbnail" style="max-width: 100%; height: auto; display: block; margin-bottom: 15px;">
-          <div class="project-desc">
-            <dl class="desc-list">
-              <dt>📌 課題内容</dt>
-              <dd>情報漏洩リスクを考慮し、外部APIへ一切データを送信せず「完全ローカル環境」で推論を行うRAG対応AIチャットボットをフルスクラッチで構築。社内文書（PDF/DOCX/CSV）を読み込ませ、その知識に基づいた回答を生成するシステムを開発しました。ローカルでの安定稼働に加え、最終的にOracle Cloud (OCI)環境へのデプロイと、Tailscaleを用いた安全な閉域網アクセスの構築までを達成しています。</dd>
-              <dt>💡 工夫した点</dt>
-              <dd>
-                <ul>
-                  <li><strong>ハイブリッド検索エンジンと完全ローカルLLM:</strong> ChromaDB（ベクトル検索）とSQLiteを統合したRAGエンジンを構築。Ollama経由で軽量モデル（<code>qwen3.5:4b</code>等）を稼働させることで、12GB RAMの制約があるクラウド環境でもセキュアかつ高精度な応答を実現しました。</li>
-                  <li><strong>フルスタックアーキテクチャの完成:</strong> フロントエンドはReact/Vite、バックエンドはFastAPIを採用。JWT認証、ユーザー別のチャットスレッド分離、SSEを利用したストリーミング応答など、実用的なUXを提供しています。</li>
-                  <li><strong>インフラ構築とセキュアなクラウド移行:</strong> アプリケーション全体をDocker Composeでコンテナ化。OCIのARMインスタンス（Ubuntu）へデプロイし、Nginx経由での配信、およびTailscaleを利用したVPNアクセス網を構築して、外部からの不正アクセスを遮断しました。</li>
-                  <li><strong>エンタープライズ向けの管理機能と監査:</strong> Fluent-bitによる監査ログ収集、ファイル名のサニタイズ、ロール別（一般・管理者）の画面制御を実装し、実際の業務利用に耐えうるセキュリティ体制を組み込みました。</li>
-                </ul>
-              </dd>
-              <dt>🔍 操作手順／閲覧手順</dt>
-              <dd>
-                <ol>
-                  <li>下の「制作概要書・説明付き図版 (PDF)」リンクをクリックすると、AIチャットボットのシステム構成や画面イメージをまとめたドキュメントをご覧いただけます。</li>
-                  <li>ソースコードはGitHubリポジトリからご確認いただけます。</li>
-                </ol>
-              </dd>
-            </dl>
-          </div>
-          <p class="demo-link-wrapper">
-            <a href="src/pdf/AIチャットボット制作概要書_東晃太.pdf" target="_blank" rel="noopener noreferrer" class="doc-link">
-              <span class="icon-image">📄</span> 制作概要書・説明付き図版 (PDF) を閲覧する
-            </a>
-          </p>
-          <div class="github-link-wrapper center">
-            <a href="https://github.com/itkyobashi263-lgtm/sk-nexus-public" target="_blank" rel="noopener noreferrer" class="github-btn">
-              🐈‍⬛ ソースコードを見る (GitHub)
-            </a>
-              </div>
-            </article>
-
-            <article class="project-item tab-content" id="internal-portal">
-              <h4>React/PHP: 業務効率化 事業所内ポータルサイト (フロント/バックエンド分離)</h4>
-              
-              <div class="dual-images-wrapper">
-                <a href="https://dc-it-kyobashi.github.io/portalapp/" target="_blank" rel="noopener noreferrer">
-                  <img src="src/images/portal_front.png" alt="事業所内ポータル フロントエンド画面">
+            <article class="tab-content" id="javascript" role="tabpanel" aria-labelledby="tab-javascript">
+              <div class="project-item">
+                <h4>JavaScript: 簡易ピアノ</h4>
+                <a href="https://itkyobashi263-lgtm.github.io/simple-piano-app/" target="_blank" rel="noopener noreferrer">
+                  <img src="src/images/piano_demo.png" alt="簡易ピアノ">
                 </a>
-                <img src="src/images/portal_back.png" alt="事業所内ポータル バックエンド・管理画面">
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 課題内容</dt>
+                    <dd>JavaScriptおよびjQueryを用いて、ブラウザ上で直感的に演奏できる簡易電子ピアノアプリを制作しました。</dd>
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li>日本語・英語・ドイツ語の「3言語表示切り替え機能」を搭載し、幅広いユーザー層に対応したグローバルな多言語設計（マルチリンガル対応）を実現しました。</li>
+                        <li>打鍵時に鍵盤が沈むアニメーションとカラー変化をCSSで表現しました。</li>
+                        <li>「きらきら星」もしくは「チューリップ」の曲が自動で演奏する機能を付けました。</li>
+                      </ul>
+                    </dd>
+                    <dt>🎮 操作手順</dt>
+                    <dd>
+                      <ol>
+                        <li>画面右下の言語選択メニューから、表示する言語を切り替えることができます。</li>
+                        <li>画面上の白鍵をクリックすると、それぞれの音階の音が鳴ります。</li>
+                        <li>自動演奏ボタンを押すと２曲のどちらかがランダムで演奏されます。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="github-link-wrapper center">
+                  <a href="https://github.com/itkyobashi263-lgtm/simple-piano-app" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    🐈‍⬛ ソースコードを見る (GitHub)
+                  </a>
+                </div>
               </div>
+            </article>
 
-              <div class="project-desc">
-                <dl class="desc-list">
-                  <dt>📌 概要・目的</dt>
-                  <dd>フロントエンド（SPA）とバックエンド（API）を完全に分離したアーキテクチャにて、事業所内の業務効率化ポータルサイトを開発。<strong>企画から設計、開発、公開までを一貫して主導</strong>しました。就労移行支援事業所として今後の利用者が利用・管理しやすいよう、技術的負債を抱えない企画・設計を工夫しています。</dd>
-                  
-                  <dt>💡 工夫した点</dt>
-                  <dd>
-                    <ul>
-                      <li><strong>次期担当者への配慮と運用保守性：</strong> フロントエンドとバックエンドの役割を明確に切り離すことで、以降の運用や保守、学習が非常にしやすい構成を構築しました。機能追加は主にGitHubで公開されるJSアプリを想定しており、学習者が安全に開発プロセスを学べる導線を確保しています。</li>
-                      <li><strong>保守性とスケーラビリティの向上：</strong> バックエンド（PHP）ではフロントコントローラパターンを徹底し、<code>JsonRepository</code>クラスを用いたRepositoryパターンを導入。データ操作処理を一元化し、モジュールごとのコード量削減と見通しの良さを実現しました。</li>
-                      <li><strong>フロントエンドの共通化：</strong> React（TypeScript）において、非同期通信とエラーハンドリングを統括するカスタムフック（<code>useApi</code>）を導入。冗長なコードを排除しUIの一貫性を保ちました。</li>
-                      <li><strong>セキュアな管理者向けバックエンド運用：</strong> 重要ディレクトリへの <code>.htaccess</code> 配置や、IP接続制限を設けることで、管理者のみがシステム内部に対応できる安全な運用体制を構築しました。</li>
-                    </ul>
-                  </dd>
+            <article class="tab-content" id="php-mysql" role="tabpanel" aria-labelledby="tab-php-mysql" hidden="until-found">
+              <div class="project-item">
+                <h4>PHP/MySQL: ECサイト</h4>
+                <a href="https://portfolio02.dc-itex.com/kyobashi/0004/ec_site/login.php" target="_blank" rel="noopener noreferrer">
+                  <img src="src/images/ec_demo.png" alt="ECサイト">
+                </a>
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 課題内容</dt>
+                    <dd>PHPバックエンドとMySQLデータベースを連携させ、会員登録・ログイン、商品一覧、カート機能、管理者向け商品管理（CRUD）機能などを統合した安全なECサイトの開発を行いました。</dd>
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li>XSS（クロスサイトスクリプティング）対策としてのサニタイズ処理や、SQLインジェクションを防ぐプリペアードステートメントを徹底し、高いセキュリティ水準を確保しました。</li>
+                        <li>ログイン状態やユーザー権限（一般ユーザー/管理者）に応じたアクセス制限を細かく設定し、未認可アクセスの保護とページリダイレクトを実装しました。</li>
+                        <li>フォームの再送信による二重注文や多重登録を防止するため、PRG（Post-Redirect-Get）パターンを適用してシステム設計を行いました。</li>
+                      </ul>
+                    </dd>
+                    <dt>🔍 閲覧手順</dt>
+                    <dd>
+                      <p class="attention-note">⚠️ サイト閲覧には専用のパスワードが必要です。ログイン情報は下のGitHub(README)をご参照ください。</p>
+                      <ol>
+                        <li>上の画像またはバナーリンクをクリックすると、ECサイトのトップページが別タブで表示されます。</li>
+                        <li>新規ユーザーとしてアカウント登録を行ってログインし、商品のカート追加や購入完了までのフローをお試しいただけます。</li>
+                        <li>管理者としてログインすることで、商品管理機能（追加・編集・削除）を行う管理者専用ページの機能をご確認いただけます。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="github-link-wrapper center">
+                  <a href="https://github.com/itkyobashi263-lgtm/php-ec-site" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    🐈‍⬛ ソースコードを見る (GitHub)
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="tab-content" id="wordpress" role="tabpanel" aria-labelledby="tab-wordpress" hidden="until-found">
+              <div class="project-item">
+                <h4>WordPress: オリジナルテーマ制作（CMS化）</h4>
+                <a href="https://portfolio02.dc-itex.com/kyobashi/0004/wp/" target="_blank" rel="noopener noreferrer">
+                  <img src="src/images/wordpress_demo.png" alt="WordPressテーマ作成">
+                </a>
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 課題内容</dt>
+                    <dd>静的なHTML/CSSのデザインデータを分解・再構築し、PHPを用いてWordPressのオリジナルカスタムテーマ化（CMS化）を行いました。</dd>
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li>ヘッダー、フッター、サイドバーなどの共通要素をコンポーネント化し、テンプレートファイルを細分化することで、コードの保守性と可読性を向上させました。</li>
+                        <li>お知らせ（カスタム投稿）や会社情報などの動的な変更箇所をWordPressの管理画面と連動させ、HTMLの知識がない管理者でも簡単かつ安全にサイト更新を行える設計にしました。</li>
+                      </ul>
+                    </dd>
+                    <dt>🔍 閲覧手順</dt>
+                    <dd>
+                      <p class="attention-note">⚠️ サイト閲覧には専用のパスワードが必要です。ログイン情報は下のGitHub(README)をご参照ください。</p>
+                      <ol>
+                        <li>上の画像リンクからWordPressで動的化されたカスタムサイトを開くことができます。</li>
+                        <li>お知らせ記事などの動的投稿が自動反映され、美しく出力されている構成をご確認いただけます。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="github-link-wrapper center">
+                  <a href="https://github.com/itkyobashi263-lgtm/wordpress-custom-theme" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    🐈‍⬛ ソースコードを見る (GitHub)
+                  </a>
+                </div>
+              </div>
+            </article>
+            
+            <article class="tab-content" id="task-manager" role="tabpanel" aria-labelledby="tab-task-manager" hidden="until-found">
+              <div class="project-item">
+                <h4>PHP・MySQL/ロリポップサーバー: タスク割り当てアプリ (Task Manager)</h4>
+                <a href="https://taskmanager-release.joinus-dc-kyobashi.com/login" target="_blank" rel="noopener noreferrer">
+                  <img src="src/images/task_manager_login.png" alt="タスク割り当てアプリ Task Manager">
+                </a>
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 課題内容</dt>
+                    <dd>ローカル環境のみで動作し、ドキュメントや引き継ぎ仕様書が存在しなかった既存のタスク割り当てアプリを対象に、AIを活用したリバースエンジニアリングを実施。ソースコードの読解と分析に基づき仕様書を新規構築し、Webサーバー（ロリポップ!レンタルサーバー）へ実稼働デプロイを行いました。</dd>
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li>ログイン機能、管理画面、自動通知メール送信システム、お問い合わせフォームなど、実稼働に必要な複数のバックエンドシステムを新規設計・構築しました。</li>
+                        <li>リファクタリングを徹底し、乱雑だったプログラムをモジュール化。可読性と今後の拡張性・保守性を大幅に高めました。</li>
+                        <li>実装だけでなく、システム全体仕様書やデータベースのテーブル定義書などを自らゼロから書き起こし、高品質な開発ドキュメント群を整備しました。</li>
+                      </ul>
+                    </dd>
+                    <dt>🔍 操作手順／閲覧手順</dt>
+                    <dd>
+                      <ol>
+                        <li>上の画像リンクをクリックすると、本番サーバー上で稼働中の「タスク割り当てアプリ」ログイン画面が別タブで表示されます。</li>
+                        <li>下の「タスク割り当てアプリのデモ画像」テキストリンクをクリックすると、ログイン後の直感的なスケジュール・タスク割付管理画面（デモ）をモーダルポップアップでご確認いただけます。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <p class="demo-link-wrapper">
+                  <a href="src/images/task_manager_demo.png" class="popup-trigger" data-caption="タスク割り当てアプリ デモ画面 (DutyShuffle)">
+                    <span class="icon-image">📸</span> タスク割り当てアプリのデモ画像 (掲載許可済み)
+                  </a>
+                  <a href="src/pdf/制作概要書_task_manager_東晃太.pdf" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    <span class="icon-image">📄</span> 制作概要書・システム仕様書 (PDF) を閲覧する
+                  </a>
+                </p>
+              </div>
+            </article>
+            
+            <article class="tab-content" id="ai-chatbot" role="tabpanel" aria-labelledby="tab-ai-chatbot" hidden="until-found">
+              <div class="project-item">
+                <h4>フルスタック（React・Python・OCI・Docker）: セキュア・ローカルAIチャットシステム (SK-Nexus)</h4>
+                <img src="src/images/ai_top_page.png" alt="AIチャットボット SK-Nexus トップ画面" class="non-clickable-thumbnail" style="max-width: 100%; height: auto; display: block; margin-bottom: 15px;">
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 課題内容</dt>
+                    <dd>情報漏洩リスクを考慮し、外部APIへ一切データを送信せず「完全ローカル環境」で推論を行うRAG対応AIチャットボットをフルスクラッチで構築。社内文書（PDF/DOCX/CSV）を読み込ませ、その知識に基づいた回答を生成するシステムを開発しました。ローカルでの安定稼働に加え、最終的にOracle Cloud (OCI)環境へのデプロイと、Tailscaleを用いた安全な閉域網アクセスの構築までを達成しています。</dd>
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li><strong>ハイブリッド検索エンジンと完全ローカルLLM:</strong> ChromaDB（ベクトル検索）とSQLiteを統合したRAGエンジンを構築。Ollama経由で軽量モデル（<code>qwen3.5:4b</code>等）を稼働させることで、12GB RAMの制約があるクラウド環境でもセキュアかつ高精度な応答を実現しました。</li>
+                        <li><strong>フルスタックアーキテクチャの完成:</strong> フロントエンドはReact/Vite、バックエンドはFastAPIを採用。JWT認証、ユーザー別のチャットスレッド分離、SSEを利用したストリーミング応答など、実用的なUXを提供しています。</li>
+                        <li><strong>インフラ構築とセキュアなクラウド移行:</strong> アプリケーション全体をDocker Composeでコンテナ化。OCIのARMインスタンス（Ubuntu）へデプロイし、Nginx経由での配信、およびTailscaleを利用したVPNアクセス網を構築して、外部からの不正アクセスを遮断しました。</li>
+                        <li><strong>エンタープライズ向けの管理機能と監査:</strong> Fluent-bitによる監査ログ収集、ファイル名のサニタイズ、ロール別（一般・管理者）の画面制御を実装し、実際の業務利用に耐えうるセキュリティ体制を組み込みました。</li>
+                      </ul>
+                    </dd>
+                    <dt>🔍 操作手順／閲覧手順</dt>
+                    <dd>
+                      <ol>
+                        <li>下の「制作概要書・説明付き図版 (PDF)」リンクをクリックすると、AIチャットボットのシステム構成や画面イメージをまとめたドキュメントをご覧いただけます。</li>
+                        <li>ソースコードはGitHubリポジトリからご確認いただけます。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <p class="demo-link-wrapper">
+                  <a href="src/pdf/AIチャットボット制作概要書_東晃太.pdf" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    <span class="icon-image">📄</span> 制作概要書・説明付き図版 (PDF) を閲覧する
+                  </a>
+                </p>
+                <div class="github-link-wrapper center">
+                  <a href="https://github.com/itkyobashi263-lgtm/sk-nexus-public" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    🐈‍⬛ ソースコードを見る (GitHub)
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="tab-content" id="internal-portal" role="tabpanel" aria-labelledby="tab-internal-portal" hidden="until-found">
+              <div class="project-item">
+                <h4>React/PHP: 業務効率化 事業所内ポータルサイト (フロント/バックエンド分離)</h4>
                 
-                  <dt>🔍 操作手順／閲覧手順</dt>
-                  <dd>
-                    <ol>
-                      <li>左の画面（フロントエンド）をクリックすると実際の機能を使うことができます。</li>
-                      <li>右の管理画面（バックエンド）については、セキュリティ上の観点からトップ画面の画像のみの公開としています。</li>
-                    </ol>
-                  </dd>
-                </dl>
-              </div>
-              <div class="github-link-wrapper center">
-                <a href="https://github.com/DC-IT-KYOBASHI/portalapp" target="_blank" rel="noopener noreferrer" class="github-btn">
-                  🐈‍⬛ フロントエンドのコードを見る (GitHub)
-                </a>
+                <div class="dual-images-wrapper">
+                  <a href="https://dc-it-kyobashi.github.io/portalapp/" target="_blank" rel="noopener noreferrer">
+                    <img src="src/images/portal_front.png" alt="事業所内ポータル フロントエンド画面">
+                  </a>
+                  <img src="src/images/portal_back.png" alt="事業所内ポータル バックエンド・管理画面">
+                </div>
+
+                <div class="project-desc">
+                  <dl class="desc-list">
+                    <dt>📌 概要・目的</dt>
+                    <dd>フロントエンド（SPA）とバックエンド（API）を完全に分離したアーキテクチャにて、事業所内の業務効率化ポータルサイトを開発。<strong>企画から設計、開発、公開までを一貫して主導</strong>しました。就労移行支援事業所として今後の利用者が利用・管理しやすいよう、技術的負債を抱えない企画・設計を工夫しています。</dd>
+                    
+                    <dt>💡 工夫した点</dt>
+                    <dd>
+                      <ul>
+                        <li><strong>次期担当者への配慮と運用保守性：</strong> フロントエンドとバックエンドの役割を明確に切り離すことで、以降の運用や保守、学習が非常にしやすい構成を構築しました。機能追加は主にGitHubで公開されるJSアプリを想定しており、学習者が安全に開発プロセスを学べる導線を確保しています。</li>
+                        <li><strong>保守性とスケーラビリティの向上：</strong> バックエンド（PHP）ではフロントコントローラパターンを徹底し、<code>JsonRepository</code>クラスを用いたRepositoryパターンを導入。データ操作処理を一元化し、モジュールごとのコード量削減と見通しの良さを実現しました。</li>
+                        <li><strong>フロントエンドの共通化：</strong> React（TypeScript）において、非同期通信とエラーハンドリングを統括するカスタムフック（<code>useApi</code>）を導入。冗長なコードを排除しUIの一貫性を保ちました。</li>
+                        <li><strong>セキュアな管理者向けバックエンド運用：</strong> 重要ディレクトリへの <code>.htaccess</code> 配置や、IP接続制限を設けることで、管理者のみがシステム内部に対応できる安全な運用体制を構築しました。</li>
+                      </ul>
+                    </dd>
+                  
+                    <dt>🔍 操作手順／閲覧手順</dt>
+                    <dd>
+                      <ol>
+                        <li>左の画面（フロントエンド）をクリックすると実際の機能を使うことができます。</li>
+                        <li>右の管理画面（バックエンド）については、セキュリティ上の観点からトップ画面の画像のみの公開としています。</li>
+                      </ol>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="github-link-wrapper center">
+                  <a href="https://github.com/DC-IT-KYOBASHI/portalapp" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    🐈‍⬛ フロントエンドのコードを見る (GitHub)
+                  </a>
+                </div>
               </div>
             </article>
 
@@ -350,15 +372,15 @@
     <p>Copyright © 2026 Kota Azuma</p>
   </footer>
   <!-- Image Popup Modal -->
-  <div id="imageModal" class="modal" aria-hidden="true" role="dialog">
+  <dialog id="imageModal" class="modal" closedby="any" aria-labelledby="modalCaption">
     <div class="modal-content-wrapper">
       <div class="image-container">
-        <span class="modal-close" id="modalClose" aria-label="閉じる">&times;</span>
+        <button type="button" class="modal-close" id="modalClose" aria-label="閉じる" autofocus>&times;</button>
         <img class="modal-content" id="modalImg" src="" alt="デモ画像">
       </div>
       <div id="modalCaption" class="modal-caption"></div>
     </div>
-  </div>
+  </dialog>
   <!-- Topに戻るボタン -->
   <a href="#" id="page-top" class="page-top-btn" aria-label="ページトップへ戻る">
     <span class="arrow"></span>

@@ -1,30 +1,91 @@
 "use strict";
 
 (() => {
-  // ハンバーガーメニューとスムーススクロールの機能
+  // ナビゲーション、スムーススクロール、ネイティブ<dialog>モーダル、アクセシブルタブ制御
   // ※ defer属性により、DOM構築完了後に自動実行されるためDOMContentLoadedは不要
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+  // ==========================================
+  // Responsive Popover Navigation
+  // ==========================================
+  const header = document.querySelector("header");
+  const headerInner = header ? header.querySelector(".header-inner") : null;
   const hamburger = document.getElementById("hamburger");
   const navMenu = document.getElementById("nav-menu");
 
-  const setMenuOpen = (isOpen) => {
-    if (!hamburger || !navMenu) return;
-    hamburger.classList.toggle("active", isOpen);
-    navMenu.classList.toggle("active", isOpen);
-    hamburger.setAttribute("aria-expanded", String(isOpen));
+  const isPopoverOpen = (el) => {
+    if (!el) return false;
+    try {
+      return el.matches(":popover-open") || el.classList.contains(":popover-open");
+    } catch {
+      return el.classList.contains(":popover-open");
+    }
   };
 
-  // ハンバーガーボタンをクリックした時の処理
-  if (hamburger && navMenu) {
-    hamburger.addEventListener("click", () => {
-      const isOpen = !hamburger.classList.contains("active");
-      setMenuOpen(isOpen);
+  const hideNavPopover = () => {
+    if (!header || !navMenu) return;
+    if (!header.classList.contains("is-wide") && isPopoverOpen(navMenu)) {
+      if (typeof navMenu.hidePopover === "function") {
+        navMenu.hidePopover();
+      }
+    }
+  };
+
+  if (header && headerInner && hamburger && navMenu) {
+    let lastHeaderWidth = 0;
+
+    const syncNavLayout = () => {
+      const wasOpen = !header.classList.contains("is-wide") && isPopoverOpen(navMenu);
+
+      header.classList.add("is-measuring", "is-wide");
+      navMenu.removeAttribute("popover");
+
+      const fits = headerInner.scrollWidth <= headerInner.clientWidth;
+
+      if (fits) {
+        hamburger.classList.remove("active");
+        hamburger.setAttribute("aria-expanded", "false");
+      } else {
+        header.classList.remove("is-wide");
+        navMenu.setAttribute("popover", "auto");
+        if (wasOpen && typeof navMenu.showPopover === "function") {
+          navMenu.showPopover();
+        }
+      }
+
+      window.requestAnimationFrame(() => {
+        header.classList.remove("is-measuring");
+      });
+    };
+
+    navMenu.addEventListener("toggle", (e) => {
+      const isOpen = e.newState === "open";
+      hamburger.classList.toggle("active", isOpen);
+      hamburger.setAttribute("aria-expanded", String(isOpen));
     });
+
+    const navResizeObserver = new ResizeObserver((entries) => {
+      const headerEntry = entries.find((entry) => entry.target === headerInner);
+      const currentWidth = headerEntry ? headerEntry.contentRect.width : headerInner.clientWidth;
+      const isWide = header.classList.contains("is-wide");
+
+      // 折りたたみ時は横幅が広がった時だけ再計測し、レイアウトスラッシングを防ぐ
+      if (isWide || currentWidth > lastHeaderWidth) {
+        syncNavLayout();
+      }
+      lastHeaderWidth = currentWidth;
+    });
+
+    syncNavLayout();
+    lastHeaderWidth = headerInner.clientWidth;
+    navResizeObserver.observe(headerInner);
+    navResizeObserver.observe(navMenu);
   }
 
-  // イージング関数付きのカスタムスムーススクロール処理（速度調整可能）
+  // ==========================================
+  // Smooth Scroll
+  // ==========================================
   let scrollAnimationId = null;
 
   const easeInOutCubic = (t) =>
@@ -52,7 +113,6 @@
 
       window.scrollTo(0, startY + difference * easeInOutCubic(percent));
 
-      // 時間がdurationに達するまでrequestAnimationFrameでアニメーションを繰り返す
       if (progress < duration) {
         scrollAnimationId = window.requestAnimationFrame(step);
       } else {
@@ -63,26 +123,40 @@
     scrollAnimationId = window.requestAnimationFrame(step);
   };
 
-  // タブ切り替え共通ヘルパー
-  const tabContents = document.querySelectorAll(".tab-content");
+  // ==========================================
+  // Accessible Tabs + hidden="until-found"
+  // ==========================================
+  const tabList = document.querySelector('.tab-links[role="tablist"]');
+  const tabButtons = Array.from(document.querySelectorAll('.tab-btn[role="tab"]'));
+  const tabPanels = Array.from(document.querySelectorAll('.tab-content[role="tabpanel"]'));
+  const tabWrapper = document.querySelector(".tab-content-wrapper");
 
-  const activateTab = (targetId) => {
-    const targetContent = document.querySelector(targetId);
-    if (!targetContent) return;
+  const activateTab = (panelId, { scrollTabIntoView = true, animate = true } = {}) => {
+    const targetPanel = document.getElementById(panelId);
+    const targetTab = tabButtons.find((btn) => btn.dataset.target === panelId);
+    if (!targetPanel || !targetTab) return;
 
-    document.querySelectorAll(".tab-links li").forEach((li) => li.classList.remove("active"));
-    tabContents.forEach((content) => content.classList.remove("active"));
+    tabButtons.forEach((btn) => {
+      const isSelected = btn === targetTab;
+      btn.setAttribute("aria-selected", String(isSelected));
+      btn.tabIndex = isSelected ? 0 : -1;
+    });
 
-    targetContent.classList.add("active");
+    tabPanels.forEach((panel) => {
+      if (panel === targetPanel) {
+        panel.removeAttribute("hidden");
+      } else {
+        panel.setAttribute("hidden", "until-found");
+      }
+    });
 
-    const matchingTabBtn = document.querySelector(`.tab-links a[href="${targetId}"]`);
-    if (matchingTabBtn) {
-      matchingTabBtn.parentElement.classList.add("active");
+    if (scrollTabIntoView) {
+      targetTab.scrollIntoView({ block: "nearest", inline: "nearest", container: "nearest" });
     }
 
-    if (!prefersReducedMotion.matches) {
-      targetContent.getAnimations().forEach((anim) => anim.cancel());
-      targetContent.animate(
+    if (animate && !prefersReducedMotion.matches) {
+      targetPanel.getAnimations().forEach((anim) => anim.cancel());
+      targetPanel.animate(
         [
           { opacity: 0, translate: "0 15px", scale: 0.98 },
           { opacity: 1, translate: "0 0", scale: 1 },
@@ -95,17 +169,69 @@
     }
   };
 
-  // ページ内のリンク（#から始まるhref、タブ切り替えリンク除く）をクリックした時のスムーススクロール処理
-  document.querySelectorAll('a[href^="#"]:not(.tab-links a)').forEach((link) => {
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.target) {
+        activateTab(btn.dataset.target);
+      }
+    });
+  });
+
+  if (tabList && tabButtons.length > 0) {
+    tabList.addEventListener("keydown", (e) => {
+      const currentIndex = tabButtons.indexOf(document.activeElement);
+      if (currentIndex === -1) return;
+
+      let nextIndex = null;
+      if (e.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % tabButtons.length;
+      } else if (e.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+      } else if (e.key === "Home") {
+        nextIndex = 0;
+      } else if (e.key === "End") {
+        nextIndex = tabButtons.length - 1;
+      }
+
+      if (nextIndex !== null) {
+        e.preventDefault();
+        const nextTab = tabButtons[nextIndex];
+        nextTab.focus();
+        if (nextTab.dataset.target) {
+          activateTab(nextTab.dataset.target);
+        }
+      }
+    });
+  }
+
+  // ブラウザのページ内検索(Ctrl+F)等で隠しパネルが自動展開された際、タブ選択状態を同期する
+  if (tabWrapper) {
+    tabWrapper.addEventListener("beforematch", (e) => {
+      const matchedPanel = e.target.closest('.tab-content[role="tabpanel"]');
+      if (matchedPanel && matchedPanel.id) {
+        activateTab(matchedPanel.id, { scrollTabIntoView: true, animate: false });
+      }
+    });
+  }
+
+  // URLハッシュがタブパネルを指している場合に同期する
+  const syncTabWithHash = () => {
+    if (!window.location.hash) return;
+    const hashId = window.location.hash.slice(1);
+    if (tabPanels.some((panel) => panel.id === hashId)) {
+      activateTab(hashId, { scrollTabIntoView: false, animate: false });
+    }
+  };
+  syncTabWithHash();
+  window.addEventListener("hashchange", syncTabWithHash);
+
+  // ページ内リンク（#から始まるhref）のスムーススクロール処理
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
-
-      // モバイル用メニューが開いていたら閉じる
-      setMenuOpen(false);
+      hideNavPopover();
 
       const targetId = this.getAttribute("href");
-
-      // href="#" の場合はページ最上部へスクロール
       if (targetId === "#") {
         smoothScrollTo(0, 650);
         return;
@@ -114,20 +240,16 @@
       const targetElement = document.querySelector(targetId);
       if (!targetElement) return;
 
-      // ターゲットがタブコンテンツだった場合は、対象タブをアクティブにする
-      if (targetElement.classList.contains("tab-content")) {
-        activateTab(targetId);
+      if (targetElement.getAttribute("role") === "tabpanel") {
+        activateTab(targetElement.id);
       }
 
-      // ヘッダーの高さを動的に取得してスクロール位置を調整
-      const header = document.querySelector("header");
       const headerHeight = header ? header.offsetHeight : 0;
-
       const getAbsoluteY = (el) => el.getBoundingClientRect().top + window.scrollY;
       let targetY = getAbsoluteY(targetElement) - headerHeight;
 
       // タブコンテンツの場合は、親要素である「Projects」セクションの位置にスクロールする（見切れ防止）
-      if (targetElement.classList.contains("tab-content")) {
+      if (targetElement.getAttribute("role") === "tabpanel") {
         const projectsSection = document.getElementById("Projects");
         if (projectsSection) {
           targetY = getAbsoluteY(projectsSection) - headerHeight;
@@ -138,80 +260,97 @@
     });
   });
 
-  // Image Popup Modal Lightbox Functionality
+  // ==========================================
+  // Native <dialog> Image Lightbox Modal
+  // ==========================================
   const modal = document.getElementById("imageModal");
   const modalImg = document.getElementById("modalImg");
   const modalCaption = document.getElementById("modalCaption");
   const modalClose = document.getElementById("modalClose");
 
-  const openModal = (src, caption) => {
-    if (!modal || !modalImg || !modalCaption) return;
-    modalImg.src = src;
-    modalCaption.textContent = caption;
-    modal.classList.remove("is-closing");
-    modal.classList.add("show");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden"; // Prevent background scrolling
+  let supportsDisplayTransition;
+  const canTransitionDisplay = () => {
+    if (supportsDisplayTransition !== undefined) return supportsDisplayTransition;
+    if (!window.CSS?.supports?.("transition-behavior", "allow-discrete") || !document.body) {
+      return false;
+    }
+    const probe = document.createElement("div");
+    probe.style.cssText = "transition: display 1s allow-discrete !important; display: block;";
+    document.body.appendChild(probe);
+    getComputedStyle(probe).display;
+    probe.style.display = "none";
+    supportsDisplayTransition = getComputedStyle(probe).display === "block";
+    probe.remove();
+    return supportsDisplayTransition;
   };
 
-  const closeModal = async () => {
-    if (!modal || !modal.classList.contains("show")) return;
-    modal.classList.remove("show");
-    modal.classList.add("is-closing");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = ""; // Restore background scrolling
+  const supportsTopLayerExit = () =>
+    Boolean(window.CSS?.supports?.("overlay", "auto") && canTransitionDisplay());
 
-    const animations = modal.getAnimations({ subtree: true });
-    if (animations.length > 0) {
-      await Promise.race([
-        Promise.allSettled(animations.map((a) => a.finished)),
-        new Promise((resolve) => setTimeout(resolve, 1000)),
-      ]);
+  const closeTopLayer = async (dialog) => {
+    if (!dialog || !dialog.open) return;
+
+    if (!supportsTopLayerExit()) {
+      dialog.setAttribute("data-closing", "");
+      const animations = dialog.getAnimations({ subtree: true });
+      if (animations.length > 0) {
+        await Promise.race([
+          Promise.allSettled(animations.map((a) => a.finished)),
+          new Promise((resolve) => setTimeout(resolve, 2000)),
+        ]);
+      }
+      if (!dialog.hasAttribute("data-closing")) return;
+      dialog.removeAttribute("data-closing");
     }
 
-    if (!modal.classList.contains("show")) {
-      modal.classList.remove("is-closing");
-    }
+    dialog.close();
   };
 
-  if (modal && modalClose) {
+  if (modal && modalImg && modalCaption && modalClose) {
     document.querySelectorAll(".popup-trigger").forEach((trigger) => {
       trigger.addEventListener("click", function (e) {
         e.preventDefault();
-        const imgSrc = this.getAttribute("href");
-        const captionText = this.getAttribute("data-caption") || "";
-        openModal(imgSrc, captionText);
+        modalImg.src = this.getAttribute("href");
+        modalCaption.textContent = this.getAttribute("data-caption") || "";
+        modal.removeAttribute("data-closing");
+        if (!modal.open) {
+          modal.showModal();
+        }
       });
     });
 
-    modalClose.addEventListener("click", closeModal);
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+    modalClose.addEventListener("click", () => {
+      closeTopLayer(modal);
     });
+
+    // Escキーやclosedbyによるネイティブ閉じ要求時も終了アニメーションを適用
+    modal.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      closeTopLayer(modal);
+    });
+
+    // Safari等 closedby 未対応ブラウザ向けのライトディスミス・フォールバック
+    if (!("closedBy" in HTMLDialogElement.prototype)) {
+      const outside = (e, dialog) => {
+        const r = dialog.getBoundingClientRect();
+        return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      };
+      let pressedOutside = false;
+      modal.addEventListener("pointerdown", (e) => {
+        pressedOutside = outside(e, modal);
+      });
+      modal.addEventListener("pointerup", (e) => {
+        if (pressedOutside && outside(e, modal)) {
+          closeTopLayer(modal);
+        }
+        pressedOutside = false;
+      });
+    }
   }
 
-  // Escapeキーでモーダルまたはモバイルメニューを閉じる
-  document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-
-    if (modal && modal.classList.contains("show")) {
-      closeModal();
-      return;
-    }
-
-    if (hamburger && navMenu && hamburger.classList.contains("active")) {
-      const wasFocusedInsideMenu = navMenu.contains(document.activeElement);
-      setMenuOpen(false);
-      if (wasFocusedInsideMenu) {
-        hamburger.focus();
-      }
-    }
-  });
-
-  // 「Topに戻る」ボタンのスクロール位置に応じた表示・非表示制御（IntersectionObserver）
+  // ==========================================
+  // Back to Top Button (IntersectionObserver)
+  // ==========================================
   const pageTopBtn = document.getElementById("page-top");
   if (pageTopBtn) {
     const scrollSentinel = document.createElement("div");
@@ -242,10 +381,8 @@
   }
 
   // ==========================================
-  // Modern Enhancements: Tabs & Scroll Animation
+  // Intersection Observer for Fade-in
   // ==========================================
-
-  // --- Intersection Observer for Fade-in ---
   const fadeObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -263,16 +400,5 @@
 
   document.querySelectorAll(".fade-in").forEach((element) => {
     fadeObserver.observe(element);
-  });
-
-  // --- Tab Switching Logic ---
-  document.querySelectorAll(".tab-links a").forEach((link) => {
-    link.addEventListener("click", function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute("href");
-      if (targetId) {
-        activateTab(targetId);
-      }
-    });
   });
 })();
