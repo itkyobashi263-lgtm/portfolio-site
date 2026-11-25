@@ -94,26 +94,33 @@
           <div class="image">
             <img src="src/images/gallery01.png" alt="資格学習">
             <h4>資格学習</h4>
-            <p>プログラマーとして成長するため、また現場で活躍できる人材になるために、日々勉強しております。<br>
-              ITパスポートや基本情報技術者試験の資格を保有。  
-            </p>
+            <p>プログラマーとして成長するため、また現場で活躍できる人材になるために、日々勉強しております。保有資格は以下の通りです。</p>
+            <ul class="qual-list">
+              <li>ITパスポート</li>
+              <li>基本情報技術者</li>
+              <li>情報セキュリティマネジメント</li>
+              <li>G検定</li>
+              <li>Python3エンジニア認定基礎試験</li>
+              <li>Python3エンジニア認定データ分析試験</li>
+            </ul>
           </div>
           <div class="image">
             <img src="src/images/gallery02.png" alt="AI">
             <h4>AI活用・効率化</h4>
-            <p>Gemini, Codex, AntigravityなどのAIを積極的に活用し、<br>効率的な作業および品質向上に努めています。<br>（制作実績：タスク管理アプリとAIチャットボットをご覧ください。）</p>
-          </div>  
+            <p>Gemini、Codex、Antigravityなどの生成AI・AI開発ツールを積極的に活用し、調査・設計・実装からリファクタリングやドキュメント整備まで、作業の効率化と品質向上に取り組んでいます。</p>
+            <p>AIを活用した制作物は、制作実績の「<a href="#task-manager">タスク管理アプリ</a>」「<a href="#ai-chatbot">AIチャットボット</a>」「<a href="#internal-portal">事業所内ポータル</a>」をご覧ください。</p>
+          </div>
           <div class="image">
             <img src="src/images/gallery03.png" alt="知識欲">
-            <h4>知的好奇心・探求心</h4> 
-            <p>
-              TypeScriptを活用したフロントエンド開発、Python, Goなどのバックエンドサイドによるシステム開発、AI駆動開発やRustによるシステムやAIの効率化などに興味があります。
-            </p>
+            <h4>知的好奇心・探求心</h4>
+            <p>ReactやTypeScriptを用いたフロントエンド開発、Python・Goによるバックエンド開発、AI駆動開発やRustによるシステム効率化などに幅広い関心を持っています。</p>
+            <p>また技術分野に限らず、理科や論理など「なぜそうなるのか」を筋道立てて考えること自体が好きで、日々の学びや課題解決の原動力になっています。</p>
           </div>
           <div class="image">
             <img src="src/images/gallery04.png" alt="思いやり">
             <h4>思いやり</h4>
-            <p>チームメンバーや組織を尊重し、常にアサーティブコミュニケーションを心がけています。<br>相手の視点に立って意見を傾聴しつつ、建設的な提案を交わすことで、チーム全体で協力して課題解決に取り組む姿勢を大切にしています。</p>
+            <p>チームメンバーや組織を尊重し、相手の立場に立って意見を傾聴するアサーティブコミュニケーションを心がけています。自分の考えも分かりやすく伝えつつ、建設的な提案で合意形成を図ります。</p>
+            <p>誰にとっても見やすく保守しやすいコードや資料を意識し、周囲と助け合いながらチーム全体で課題解決へ進める姿勢を大切にしています。</p>
           </div>
         </div>
       </section>
@@ -124,13 +131,21 @@
         
         <!-- タブボタン -->
         <div class="tabs-container">
-          <div class="tab-links" role="tablist" aria-label="制作実績一覧">
-            <button type="button" class="tab-btn" id="tab-javascript" role="tab" aria-selected="true" tabindex="0" data-target="javascript">簡易ピアノ (JS)</button>
-            <button type="button" class="tab-btn" id="tab-php-mysql" role="tab" aria-selected="false" tabindex="-1" data-target="php-mysql">ECサイト (PHP)</button>
-            <button type="button" class="tab-btn" id="tab-wordpress" role="tab" aria-selected="false" tabindex="-1" data-target="wordpress">テーマ制作 (WP)</button>
-            <button type="button" class="tab-btn" id="tab-task-manager" role="tab" aria-selected="false" tabindex="-1" data-target="task-manager">タスク管理アプリ</button>
-            <button type="button" class="tab-btn" id="tab-ai-chatbot" role="tab" aria-selected="false" tabindex="-1" data-target="ai-chatbot">AIチャットボット</button>
-            <button type="button" class="tab-btn" id="tab-internal-portal" role="tab" aria-selected="false" tabindex="-1" data-target="internal-portal">事業所内ポータル</button>
+          <div class="tab-scroll-wrapper">
+            <button type="button" class="tab-scroll-btn" data-tab-scroll="prev" aria-label="前の実績タブへスクロール" hidden>
+              <span aria-hidden="true">&#8249;</span>
+            </button>
+            <div class="tab-links" role="tablist" aria-label="制作実績一覧">
+              <button type="button" class="tab-btn" id="tab-javascript" role="tab" aria-selected="true" tabindex="0" data-target="javascript">簡易ピアノ (JS)</button>
+              <button type="button" class="tab-btn" id="tab-php-mysql" role="tab" aria-selected="false" tabindex="-1" data-target="php-mysql">ECサイト (PHP)</button>
+              <button type="button" class="tab-btn" id="tab-wordpress" role="tab" aria-selected="false" tabindex="-1" data-target="wordpress">テーマ制作 (WP)</button>
+              <button type="button" class="tab-btn" id="tab-task-manager" role="tab" aria-selected="false" tabindex="-1" data-target="task-manager">タスク管理アプリ</button>
+              <button type="button" class="tab-btn" id="tab-ai-chatbot" role="tab" aria-selected="false" tabindex="-1" data-target="ai-chatbot">AIチャットボット</button>
+              <button type="button" class="tab-btn" id="tab-internal-portal" role="tab" aria-selected="false" tabindex="-1" data-target="internal-portal">事業所内ポータル</button>
+            </div>
+            <button type="button" class="tab-scroll-btn" data-tab-scroll="next" aria-label="次の実績タブへスクロール" hidden>
+              <span aria-hidden="true">&#8250;</span>
+            </button>
           </div>
 
           <!-- タブコンテンツ -->

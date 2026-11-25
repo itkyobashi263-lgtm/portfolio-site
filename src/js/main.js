@@ -139,6 +139,84 @@
   };
 
   /**
+   * 制作実績タブリストの左右スクロールボタンおよびマウスホイール横スクロールを制御する。
+   */
+  const initTabScrollControls = (tabList) => {
+    if (!tabList) return;
+
+    const wrapper = tabList.closest(".tab-scroll-wrapper");
+    const prevBtn = wrapper?.querySelector('[data-tab-scroll="prev"]');
+    const nextBtn = wrapper?.querySelector('[data-tab-scroll="next"]');
+
+    let rafId = null;
+    const syncButtons = () => {
+      rafId = null;
+      if (!prevBtn || !nextBtn) return;
+
+      const maxScrollLeft = tabList.scrollWidth - tabList.clientWidth;
+      const hasOverflow = maxScrollLeft > 2;
+      prevBtn.hidden = !hasOverflow;
+      nextBtn.hidden = !hasOverflow;
+
+      if (!hasOverflow) {
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      const atStart = tabList.scrollLeft <= 2;
+      const atEnd = tabList.scrollLeft >= maxScrollLeft - 2;
+
+      if (atStart && document.activeElement === prevBtn) {
+        nextBtn.focus();
+      } else if (atEnd && document.activeElement === nextBtn) {
+        prevBtn.focus();
+      }
+
+      prevBtn.disabled = atStart;
+      nextBtn.disabled = atEnd;
+    };
+
+    const scheduleSync = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(syncButtons);
+    };
+
+    const scrollByStep = (direction) => {
+      const step = Math.max(160, Math.round(tabList.clientWidth * 0.7));
+      tabList.scrollBy({
+        left: direction * step,
+        behavior: prefersReducedMotion.matches ? "auto" : "smooth",
+      });
+    };
+
+    prevBtn?.addEventListener("click", () => scrollByStep(-1));
+    nextBtn?.addEventListener("click", () => scrollByStep(1));
+
+    // デスクトップの縦マウスホイールでもタブ領域上では横スクロールできるよう補助する
+    tabList.addEventListener(
+      "wheel",
+      (e) => {
+        if (e.deltaX !== 0 || e.deltaY === 0) return;
+        const maxScrollLeft = tabList.scrollWidth - tabList.clientWidth;
+        if (maxScrollLeft <= 2) return;
+
+        const canScrollForward = e.deltaY > 0 && tabList.scrollLeft < maxScrollLeft - 1;
+        const canScrollBackward = e.deltaY < 0 && tabList.scrollLeft > 1;
+        if (!canScrollForward && !canScrollBackward) return;
+
+        e.preventDefault();
+        tabList.scrollBy({ left: e.deltaY, behavior: "auto" });
+      },
+      { passive: false }
+    );
+
+    tabList.addEventListener("scroll", scheduleSync, { passive: true });
+    new ResizeObserver(scheduleSync).observe(tabList);
+    syncButtons();
+  };
+
+  /**
    * タブの選択状態、矢印キー移動、`hidden="until-found"`、URLハッシュ同期を初期化する。
    */
   const initTabs = () => {
@@ -230,6 +308,7 @@
 
     syncTabWithHash();
     window.addEventListener("hashchange", syncTabWithHash);
+    initTabScrollControls(tabList);
 
     return activateTab;
   };

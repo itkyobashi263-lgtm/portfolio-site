@@ -494,6 +494,22 @@ h3 {
   color: var(--text-light);
 }
 
+.image p:not(:last-child) {
+  padding-bottom: 10px;
+}
+
+.qual-list {
+  list-style: disc;
+  padding: 0 15px 20px 33px;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  text-wrap: pretty;
+}
+
+.qual-list li + li {
+  margin-top: 4px;
+}
+
 /* ==========================================================================
    Project Items (Sample & Training)
    ========================================================================== */
@@ -1039,18 +1055,90 @@ dialog.modal[open]:where(:not([data-closing])) .modal-content {
   }
 }
 
+.tab-scroll-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.tab-scroll-btn {
+  flex: none;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 50%;
+  border: 1px solid #64748b;
+  background-color: var(--white);
+  color: var(--text-main);
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  touch-action: manipulation;
+  transition: background-color var(--ease-standard), color var(--ease-standard), border-color var(--ease-standard), opacity var(--ease-standard);
+}
+
+.tab-scroll-btn[hidden] {
+  display: none;
+}
+
+.tab-scroll-btn:hover:not(:disabled) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.tab-scroll-btn:active:not(:disabled) {
+  scale: 0.96;
+}
+
+.tab-scroll-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  box-shadow: none;
+}
+
 .tab-links {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-wrap: nowrap;
   gap: 10px;
   justify-content: safe center;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  touch-action: manipulation;
   scroll-snap-type: inline proximity;
   scroll-padding-inline: 2rem;
-  scrollbar-width: none;
-  margin-bottom: 30px;
-  padding: 6px 4px;
+  --scrollbar-thumb: #475569;
+  --scrollbar-track: #e2e8f0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  padding: 6px 4px 12px;
   --fade-size: 2rem;
+
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+}
+
+@supports not (scrollbar-color: auto) {
+  .tab-links::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .tab-links::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+  }
+
+  .tab-links::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 999px;
+  }
 }
 
 @supports (animation-timeline: scroll()) {
